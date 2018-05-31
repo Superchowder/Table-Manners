@@ -194,23 +194,23 @@ function endGame(player, box) {
 //rotates the fork from clockwise to counter clockwise
 function rotation() {
     if (fork.angle < 110 && clockwise) {
-        fork.angle += 1;
+        fork.angle += 8;
     } else if (fork.angle >= 110 && clockwise) {
         clockwise = false;
     } else if (fork.angle > -110 && !clockwise) {
-        fork.angle -= 1;
+        fork.angle -= 8;
     } else {
         clockwise = true;
     }
 }
 
 function powerBar() {
-    if (speedFactor < 100 && up) {
-        speedFactor += 2;
-    } else if (speedFactor >= 100 && up) {
+    if (speedFactor < 99 && up) {
+        speedFactor += 3;
+    } else if (speedFactor >= 99 && up) {
         up = false;
     } else if (speedFactor > 0 && !up) {
-        speedFactor -= 2;
+        speedFactor -= 3;
     } else {
         up = true;
     }
@@ -329,23 +329,6 @@ function returnFood(x, y) {
 
 //moves the fork at the angle that it is being rotated at
 function forkMovement() {
-    let temp = fork.angle * (Math.PI / 180);
-    x = Math.sin(temp) * 65;
-    y = Math.cos(temp) * 65;
-    console.log("angle: " + fork.angle);
-    console.log("x: " + x);
-    console.log("y: " + y);
-    x = 0;
-    y = 0;
-
-    if (fork.angle < 0) {
-        fork.body.setSize(30, 30, -x, y);
-    } else {
-        fork.body.setSize(30, 30, x, y);
-    }
-
-
-
     game.physics.arcade.velocityFromAngle(fork.angle + 90, -5 * speedFactor, fork.body.velocity);
     origPos = false;
     game.time.events.add(1000, returnFork, this);
@@ -498,6 +481,7 @@ GamePlay.prototype = {
         game.physics.arcade.enable(food1);
 
         fork.body.setSize(30, 30, 0, 71.5);
+        fork2.body.setSize(30, 30, 0, 71.5);
 
         food.anchor.setTo(0.5, 0.5);
         food2.anchor.setTo(0.5, 0.5);
@@ -594,7 +578,6 @@ GamePlay.prototype = {
         let temp = (fork.angle + 90) * (Math.PI / 180);
         x = Math.cos(temp) * 45;
         y = Math.sin(temp) * 45;
-        console.log("y: " + y);
 
         if (fork.angle < 0) {
             fork.body.setSize(30, 30, -x, -y + 69.5);
@@ -623,6 +606,8 @@ GamePlay.prototype = {
         }
 
         bar.width = width * (speedFactor / 100);
+
+        bar.tint = Math.round((1-(speedFactor / 100) * 0xFF)) * 65536 + Math.round(((speedFactor / 100) * 0xFF)) * 256;
 
 
         //moves fork based on power level
