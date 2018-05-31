@@ -155,6 +155,7 @@ Round.prototype = {
 var speedFactor;
 var speedFactor2;
 var up;
+var up2;
 var maxSpeed = 100;
 var clockwise;
 var clockwise2;
@@ -180,8 +181,11 @@ var p2_wins;
 var rainbow;
 var lastWinner;
 var powerBarHelper;
+var powerBarHelper2;
 var shoot;
+var shoot2;
 var width;
+var width2;
 var x;
 var y;
 
@@ -209,10 +213,22 @@ function powerBar() {
         speedFactor += 3;
     } else if (speedFactor >= 99 && up) {
         up = false;
-    } else if (speedFactor > 0 && !up) {
+    } else if (speedFactor > 3 && !up) {
         speedFactor -= 3;
     } else {
         up = true;
+    }
+}
+
+function powerBar2() {
+    if (speedFactor2 < 99 && up2) {
+        speedFactor2 += 3;
+    } else if (speedFactor2 >= 99 && up2) {
+        up2 = false;
+    } else if (speedFactor2 > 3 && !up2) {
+        speedFactor2 -= 3;
+    } else {
+        up2 = true;
     }
 }
 
@@ -275,6 +291,7 @@ function returnFork2() {
         game.time.events.add(1000, () => {
             origPos2 = true;
             speedFactor2 = 0;
+            powerBarHelper2 = true;
         }, this);
     }
 
@@ -464,8 +481,11 @@ GamePlay.prototype = {
         food2 = game.add.sprite(10000, 10000, 'food2');
         food3 = game.add.sprite(10000, 10000, 'food3');
         bar = game.add.sprite(55, 800, 'bar');
-        barTop = game.add.sprite(55, 800, 'barTop');
+        bar2 = game.add.sprite(600, 800, 'bar');
+        barTop = game.add.sprite(600, 800, 'barTop');
+        barTop2 = game.add.sprite(55, 800, 'barTop');
         width = bar.width;
+        width2 = bar.width;
 
         winIcon = game.add.sprite(3000, 80, 'Icon');
         winIcon2 = game.add.sprite(3000, 80, 'Icon');
@@ -512,7 +532,9 @@ GamePlay.prototype = {
         breaker = false;
         clockwise = true;
         up = true;
+        up2 = true;
         powerBarHelper = true;
+        powerBarHelper2 = true;
         clockwise2 = true;
         origPos = true;
         origPos2 = true;
@@ -530,6 +552,7 @@ GamePlay.prototype = {
         alreadyPulled = false;
         lastWinner = false;
         shoot = false;
+        shoot2 = false;
         scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
         powerText = game.add.text(10, 750, 'Power: 0', { fontSize: '32px', fill: '#000' });
         scoreText2 = game.add.text(600, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
@@ -585,14 +608,22 @@ GamePlay.prototype = {
             fork.body.setSize(30, 30, -x, -y + 69.5);
         }
 
+        let temp2 = (fork2.angle + 90) * (Math.PI / 180);
+        let x2 = Math.cos(temp2) * 45;
+        let y2 = Math.sin(temp2) * 45;
+
+        if (fork2.angle < 0) {
+            fork2.body.setSize(30, 30, -x2, -y2 + 69.5);
+        } else {
+            fork2.body.setSize(30, 30, -x2, -y2 + 69.5);
+        }
+
 
 
         //charges the power "bar"
         if (cursors.down.isDown) {
-            if (speedFactor2 < maxSpeed) {
-                speedFactor2 += 1;
-
-            }
+        	powerBarHelper2 = false;
+        	shoot2 = false;
         }
         //charges the power "bar"
         if (game.input.keyboard.isDown(Phaser.Keyboard.S)) {
@@ -605,9 +636,16 @@ GamePlay.prototype = {
             shoot = false;
         }
 
-        bar.width = width * (speedFactor / 100);
+        if (powerBarHelper2) {
+            powerBar2();
+            shoot2 = false;
+        }
 
-        bar.tint = Math.round((1-(speedFactor / 100) * 0xFF)) * 65536 + Math.round(((speedFactor / 100) * 0xFF)) * 256;
+        bar.width = width * (speedFactor / 100);
+        bar2.width = width2 * (speedFactor2 / 100);
+
+        bar.tint = Math.round((1 - (speedFactor / 100) * 0xFF)) * 65536 + Math.round(((speedFactor / 100) * 0xFF)) * 256;
+        bar2.tint = Math.round((1 - (speedFactor2 / 100) * 0xFF)) * 65536 + Math.round(((speedFactor2 / 100) * 0xFF)) * 256;
 
 
         //moves fork based on power level
