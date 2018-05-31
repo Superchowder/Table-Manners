@@ -267,31 +267,33 @@ function returnFork() {
             origPos = true;
             speedFactor = 0;
             powerBarHelper = true;
+            enableObstacleCollide = true;
         }, this);
     }
 }
 
 function returnFork2() {
     if (!didCollide2) {
-        let i = 60;
-        let xDif = (fork2.x - 600);
-        let yDif = (fork2.y - 600);
+        let i2 = 60;
+        let xDif2 = (fork2.x - 600);
+        let yDif2 = (fork2.y - 600);
         fork2.body.velocity.x = 0;
         fork2.body.velocity.y = 0;
         game.time.events.repeat(1000 / 60, 60, () => {
-            let xPos = xDif / i;
-            let yPos = yDif / i;
-            xDif -= xPos;
-            yDif -= yPos;
-            i--;
-            fork2.x -= xPos;
-            fork2.y -= yPos;
+            let xPos2 = xDif2 / i2;
+            let yPos2 = yDif2 / i2;
+            xDif2 -= xPos2;
+            yDif2 -= yPos2;
+            i2--;
+            fork2.x -= xPos2;
+            fork2.y -= yPos2;
         }, this);
 
         game.time.events.add(1000, () => {
             origPos2 = true;
             speedFactor2 = 0;
             powerBarHelper2 = true;
+            enableObstacleCollide2 = true;
         }, this);
     }
 
