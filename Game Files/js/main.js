@@ -5,19 +5,33 @@ MainMenu.prototype = {
         //loads in text and audio
         game.load.audio('music', 'assets/audio/GameSound.mp3');
         game.load.audio('yelp', 'assets/audio/ouch.mp3');
+        game.load.image('banner', 'assets/img/TM_logo.png');
+        game.load.image('rated', 'assets/img/rated.jpg');
+        game.load.image('background', 'assets/img/background.jpg');
     },
     create: function() {
-        title = this.add.text(150, 50, 'Table', { fontSize: '120px', fill: '#8e8e8d', stroke: 'black' });
-        title2 = this.add.text(150, 160, 'Manners', { fontSize: '120px', fill: '#8e8e8d' });
+
+        background = game.add.sprite(0, 0, 'background');
+        banner = game.add.sprite(game.world.centerX, 250, 'banner');
+        banner.anchor.setTo(0.5, 0.5);
+        rated = game.add.sprite(60, 770, 'rated');
+        rated.anchor.setTo(0.5, 0.5);
         this.add.text(230, 500, 'Instructions:', { fontSize: '50px', fill: 'black' });
         this.add.text(150, 630, 'Press S  OR  DOWN   to charge', { fontSize: '30px', fill: 'black' });
         this.add.text(150, 570, 'Press W OR  UP         to throw out fork', { fontSize: '30px', fill: 'black' });
         this.add.text(150, 600, 'Press A  OR  LEFT     to eat', { fontSize: '30px', fill: 'black' });
-        this.add.text(150, 700, 'Press ENTER to START', { fontSize: '45px', fill: 'black' });
-        title.stroke = '#000000';
-        title.strokeThickness = 8;
-        title2.stroke = '#000000';
-        title2.strokeThickness = 8;
+        copyright = game.add.text(game.world.centerX, 830, '©2018 HungryBois Inc.', {fontSize: '40px', fill: 'white'});
+        startText = game.add.text(400, 700, 'Press ENTER to START', { fontSize: '45px', fill: 'black' });
+        startText.scale.set(.75);
+        startText.anchor.setTo(0.5,0.5);
+        copyright.anchor.setTo(0.5,0.5);
+        copyright.scale.set(.40);
+
+        this.add.tween(startText.scale).to({
+            x: 1,
+            y: 1
+        }, 500, 'Linear', true, 0, -1, true);
+
         p1_wins = 0;
         p2_wins = 0;
         roundCount = 0;
@@ -677,7 +691,7 @@ GamePlay.prototype = {
         //allows the player to eat food if its on their plate
         if (foodInPlay) {
             if ((game.input.keyboard.isDown(Phaser.Keyboard.A) && foodEat) || (cursors.left.isDown && foodEat2)) {
-            	foodInPlay = false;
+                foodInPlay = false;
                 enableObstacleCollide = false;
                 enableObstacleCollide2 = false;
                 game.time.events.remove(timerEvents[w]);
@@ -713,9 +727,9 @@ GamePlay.prototype = {
                 }, this);
 
                 game.time.events.add(1500, () => {
-                	foodEat = false;
-                	foodEat2 = false;
-                	foodInPlay = true;
+                    foodEat = false;
+                    foodEat2 = false;
+                    foodInPlay = true;
                     enableObstacleCollide = true;
                     enableObstacleCollide2 = true;
                 }, this);
