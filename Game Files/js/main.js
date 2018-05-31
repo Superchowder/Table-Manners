@@ -188,6 +188,7 @@ var width;
 var width2;
 var x;
 var y;
+var foodInPlay;
 
 
 //ends game
@@ -304,6 +305,7 @@ function returnFork2() {
 //pool[w] increase w each pass through then change it back to 0 at end of pull
 //game.time.events.remove(pool[w])
 function returnFood(x, y) {
+    console.log('return food');
     w++;
     if (alreadyPulled) {
         w = 1;
@@ -364,6 +366,7 @@ function forkMovement2() {
 
 //moves all objects upon collision and plays collision sound
 function collision() {
+
     console.log('collision detected');
     foodEat2 = false;
     enableObstacleCollide = false;
@@ -378,6 +381,8 @@ function collision() {
 
 //moves all objects upon collision and plays collision sound
 function collision2() {
+    console.log('obstacle collision? ' + enableObstacleCollide);
+    console.log('collision detected2');
     enableObstacleCollide2 = false;
     foodEat = false;
     yelp.play();
@@ -446,17 +451,14 @@ function changeTime() {
             lastWinner = false;
             roundCount++;
         }
-        console.log('player 1 wins: ' + p1_wins);
 
         if (p1_wins > 2 || p2_wins > 2) {
-            console.log('GAME SHOULD HAVE ENDED');
             game.state.start('GameOver');
         } else {
             game.state.start('Round');
         }
 
     }
-
 }
 
 
@@ -517,13 +519,13 @@ GamePlay.prototype = {
 
 
         fork.body.gravity.y = 0;
-        fork.body.collideWorldBounds = true;
+        //fork.body.collideWorldBounds = true;
         fork.body.allowRotation = true;
         fork.angle = 0;
         fork.anchor.setTo(0.5, 0.5);
 
         fork2.body.gravity.y = 0;
-        fork2.body.collideWorldBounds = true;
+        //fork2.body.collideWorldBounds = true;
         fork2.body.allowRotation = true;
         fork2.angle = 0;
         fork2.anchor.setTo(0.5, 0.5);
@@ -555,6 +557,7 @@ GamePlay.prototype = {
         lastWinner = false;
         shoot = false;
         shoot2 = false;
+        foodInPlay = true;
         scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
         powerText = game.add.text(10, 750, 'Power: 0', { fontSize: '32px', fill: '#000' });
         scoreText2 = game.add.text(600, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
@@ -624,8 +627,8 @@ GamePlay.prototype = {
 
         //charges the power "bar"
         if (cursors.down.isDown) {
-        	powerBarHelper2 = false;
-        	shoot2 = false;
+            powerBarHelper2 = false;
+            shoot2 = true;
         }
         //charges the power "bar"
         if (game.input.keyboard.isDown(Phaser.Keyboard.S)) {
@@ -651,7 +654,7 @@ GamePlay.prototype = {
 
 
         //moves fork based on power level
-        if (cursors.up.justDown && origPos2) {
+        if (cursors.up.justDown && origPos2 && shoot2) {
             if (speedFactor2 > 1) {
                 forkMovement2();
                 didCollide2 = false;
@@ -671,44 +674,53 @@ GamePlay.prototype = {
         game.physics.arcade.collide(fork2, food, collision2, collisionDetect2);
         game.physics.arcade.overlap(fork, fork2);
 
-
         //allows the player to eat food if its on their plate
-        if ((game.input.keyboard.isDown(Phaser.Keyboard.A) && foodEat) || (cursors.left.isDown && foodEat2)) {
-            //food.x = 330;
-            //food.y = 220;
-            food.kill();
+        if (foodInPlay) {
+            if ((game.input.keyboard.isDown(Phaser.Keyboard.A) && foodEat) || (cursors.left.isDown && foodEat2)) {
+            	foodInPlay = false;
+                enableObstacleCollide = false;
+                enableObstacleCollide2 = false;
+                game.time.events.remove(timerEvents[w]);
+                game.time.events.remove(timerEvents2[w]);
+                food.x = 1000;
+                food.y = 220;
+                food.kill();
 
-            if (foodEat) {
-                score += 10;
-            } else {
-                score2 += 10;
-            }
-
-
-            didCollide = false;
-            didCollide2 = false;
-            foodEat = false;
-            foodEat2 = false;
-            game.time.events.add(1000, () => {
-                let r = game.rnd.integerInRange(1, 3);
-                console.log(r);
-                if (r == 1) {
-                    food = food1;
-                } else if (r == 2) {
-                    food = food2;
+                if (foodEat) {
+                    score += 10;
                 } else {
-                    food = food3;
+                    score2 += 10;
                 }
-                food.x = 395;
-                food.y = 270;
-                food.revive();
-            }, this);
 
-            game.time.events.add(1500, () => {
-                enableObstacleCollide = true;
-                enableObstacleCollide2 = true;
-            }, this);
 
+                didCollide = false;
+                didCollide2 = false;
+                foodEat = false;
+                foodEat2 = false;
+                game.time.events.add(1000, () => {
+                    let r = game.rnd.integerInRange(1, 3);
+                    console.log(r);
+                    if (r == 1) {
+                        food = food1;
+                    } else if (r == 2) {
+                        food = food2;
+                    } else {
+                        food = food3;
+                    }
+                    food.x = 395;
+                    food.y = 270;
+                    food.revive();
+                }, this);
+
+                game.time.events.add(1500, () => {
+                	foodEat = false;
+                	foodEat2 = false;
+                	foodInPlay = true;
+                    enableObstacleCollide = true;
+                    enableObstacleCollide2 = true;
+                }, this);
+
+            }
         }
 
         //only rotates the fork if its in the original position
