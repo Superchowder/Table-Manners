@@ -8,56 +8,188 @@ MainMenu.prototype = {
         game.load.image('banner', 'assets/img/TM_logo.png');
         game.load.image('rated', 'assets/img/rated.jpg');
         game.load.image('background', 'assets/img/background.jpg');
+        game.load.image('start', 'assets/img/plateStart.png');
+        game.load.image('settings', 'assets/img/plateControls.png');
+        game.load.image('leaderboard', 'assets/img/plateLead.png');
+        game.load.image('fork', 'assets/img/fork.png');
     },
     create: function() {
 
         background = game.add.sprite(0, 0, 'background');
         banner = game.add.sprite(game.world.centerX, 250, 'banner');
         banner.anchor.setTo(0.5, 0.5);
-        rated = game.add.sprite(60, 770, 'rated');
-        rated.anchor.setTo(0.5, 0.5);
-        this.add.text(230, 500, 'Instructions:', { fontSize: '50px', fill: 'black' });
-        this.add.text(150, 630, 'Press S  OR  DOWN   to charge', { fontSize: '30px', fill: 'black' });
-        this.add.text(150, 570, 'Press W OR  UP         to throw out fork', { fontSize: '30px', fill: 'black' });
-        this.add.text(150, 600, 'Press A  OR  LEFT     to eat', { fontSize: '30px', fill: 'black' });
-        copyright = game.add.text(game.world.centerX, 830, '©2018 HungryBois Inc.', {fontSize: '40px', fill: 'white'});
-        startText = game.add.text(400, 700, 'Press ENTER to START', { fontSize: '45px', fill: 'black' });
-        startText.scale.set(.75);
-        startText.anchor.setTo(0.5,0.5);
-        copyright.anchor.setTo(0.5,0.5);
+        //rated = game.add.sprite(60, 770, 'rated');
+        //rated.anchor.setTo(0.5, 0.5);
+
+        copyright = game.add.text(game.world.centerX, 830, '©2018 HungryBois Inc.', { fontSize: '40px', fill: 'white' });
+        copyright.anchor.setTo(0.5, 0.5);
         copyright.scale.set(.40);
 
-        this.add.tween(startText.scale).to({
-            x: 1,
-            y: 1
-        }, 500, 'Linear', true, 0, -1, true);
+        shadow = game.add.sprite(game.world.centerX - 220, 393, 'fork');
+        shadow.alpha = 0.6;
+        shadow.tint = 0x000000;
+        shadow.angle = 90;
+        fork = game.add.sprite(game.world.centerX - 225, 390, 'fork');
+        fork.angle = 90;
+        fork.anchor.setTo(0.5, 0.5);
+        shadow.anchor.setTo(0.5, 0.5);
+
+        shadow2 = game.add.sprite(game.world.centerX + 220, 393, 'fork');
+        shadow2.alpha = 0.6;
+        shadow2.tint = 0x000000;
+        shadow2.angle = -90;
+        fork2 = game.add.sprite(game.world.centerX + 225, 390, 'fork');
+        fork2.angle = -90;
+        fork2.anchor.setTo(0.5, 0.5);
+        shadow2.anchor.setTo(0.5, 0.5);
+
+        start = game.add.sprite(game.world.centerX, 400, 'start');
+        start.anchor.setTo(0.5, 0.5);
+        settings = game.add.sprite(game.world.centerX, 535, 'settings');
+        settings.anchor.setTo(0.5, 0.5);
+        lead = game.add.sprite(game.world.centerX, 670, 'leaderboard');
+        lead.anchor.setTo(0.5, 0.5);
+
+        start.events.onInputOver.add(() => {
+            fork.y = 390;
+            shadow.y = 393;
+            fork2.y = 390;
+            shadow2.y = 393;
+            menu = 1;
+        });
+
+        start.inputEnabled = true;
+        start.events.onInputDown.add(() => {
+            game.state.start('Round');
+        });
+
+        settings.events.onInputOver.add(() => {
+            fork.y = 530;
+            shadow.y = 533;
+            fork2.y = 530;
+            shadow2.y = 533;
+            menu = 2;
+        });
+
+        settings.inputEnabled = true;
+        settings.events.onInputDown.add(() => {
+            game.state.start('Controls');
+        });
+
+        lead.events.onInputOver.add(() => {
+            fork.y = 670;
+            shadow.y = 673;
+            fork2.y = 670;
+            shadow2.y = 673;
+            menu = 3;
+        });
+
+        lead.inputEnabled = true;
+        lead.events.onInputDown.add(() => {
+            game.state.start('Leaderboard');
+        });
+
+
 
         p1_wins = 0;
         p2_wins = 0;
         roundCount = 0;
+        menu = 1;
 
         game.stage.backgroundColor = "#a37041";
     },
     update: function() {
+        var cursors = game.input.keyboard.createCursorKeys();
+
+        if (cursors.down.justDown && menu < 3) {
+            fork.y += 140;
+            shadow.y += 140;
+            fork2.y += 140;
+            shadow2.y += 140;
+            menu++;
+        }
+
+        if (cursors.up.justDown && menu > 1) {
+            fork.y -= 140;
+            shadow.y -= 140;
+            fork2.y -= 140;
+            shadow2.y -= 140;
+            menu--;
+        }
+
         //changes states
-        if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
+        if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER) && menu == 1) {
             game.state.start('Round');
+        }
+
+        if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER) && menu == 2) {
+            game.state.start('Controls');
+        }
+
+        if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER) && menu == 3) {
+            game.state.start('Leaderboard');
         }
     }
 }
+
+
+
+
+
+var Controls = function(game) {};
+Controls.prototype = {
+    preload: function() {
+        background = game.add.sprite(0, 0, 'background');
+    },
+    create: function() {
+
+        controlText = game.add.text(game.world.centerX, 200, 'Controls', { fontSize: '120px', fill: '#48f442' });
+        controlText.anchor.setTo(0.5, 0.5);
+        game.stage.backgroundColor = "#a37041";
+    },
+    update: function() {
+        if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
+            game.state.start('MainMenu');
+        }
+
+    }
+}
+
+var Leaderboard = function(game) {};
+Leaderboard.prototype = {
+    preload: function() {
+        background = game.add.sprite(0, 0, 'background');
+    },
+    create: function() {
+
+        controlText = game.add.text(game.world.centerX, 200, 'LeaderBoard', { fontSize: '120px', fill: '#48f442' });
+        controlText.anchor.setTo(0.5, 0.5);
+        game.stage.backgroundColor = "#a37041";
+    },
+    update: function() {
+        if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
+            game.state.start('MainMenu');
+        }
+
+    }
+}
+
+
+
+
 
 var Round = function(game) {};
 Round.prototype = {
     preload: function() {
         game.load.path = 'assets/img/';
-        game.load.image('table', 'table.png');
-        game.load.image('fork', 'fork.png');
+        game.load.image('table', 'table2.png');
         game.load.image('food', 'sushiroll.png');
         game.load.image('Icon', 'myMeat.png');
         game.load.image('food2', 'watermelon.png');
         game.load.image('food3', 'bread.png');
         game.load.image('bar', 'PowerBar.png');
         game.load.image('barTop', 'PowerBarTop.png');
+        game.load.image('barBottom', 'PowerBarBottom.png');
 
 
     },
@@ -104,12 +236,16 @@ Round.prototype = {
         }
 
         scoreText = game.add.text(16, 16, 'P1 Score: 0', { fontSize: '32px', fill: '#000' });
-        powerText = game.add.text(10, 750, 'Power: 0', { fontSize: '32px', fill: '#000' });
+        powerText = game.add.text(30, 750, 'Telekinetic Power', { fontSize: '32px', fill: 'white' });
         scoreText2 = game.add.text(600, 16, 'P2 Score: 0', { fontSize: '32px', fill: '#000' });
-        powerText2 = game.add.text(550, 750, 'Power: 0', { fontSize: '32px', fill: '#000' });
+        powerText2 = game.add.text(490, 750, 'Telekinetic Power', { fontSize: '32px', fill: 'white' });
         WinText = game.add.text(16, 60, 'Wins: ', { fontSize: '32px', fill: '#000' });
         WinText = game.add.text(600, 60, 'Wins: ', { fontSize: '32px', fill: '#000' });
         RoundText = game.add.text(400, 350, 'Round ' + (roundCount + 1), { fontSize: '140px', fill: '#c10f09' });
+        powerText.stroke = 'black';
+        powerText.strokeThickness = 8;
+        powerText2.stroke = 'black';
+        powerText2.strokeThickness = 8;
 
         if (lastWinner) {
             WinnerText = game.add.text(400, 350, 'PLAYER 1 WINS! ', { fontSize: '70px', fill: '#c10f09' });
@@ -203,6 +339,7 @@ var width2;
 var x;
 var y;
 var foodInPlay;
+var menu;
 
 
 //ends game
@@ -498,10 +635,14 @@ GamePlay.prototype = {
         fork2 = game.add.sprite(600, 600, 'fork');
         food2 = game.add.sprite(10000, 10000, 'food2');
         food3 = game.add.sprite(10000, 10000, 'food3');
-        bar = game.add.sprite(55, 800, 'bar');
-        bar2 = game.add.sprite(600, 800, 'bar');
-        barTop = game.add.sprite(600, 800, 'barTop');
-        barTop2 = game.add.sprite(55, 800, 'barTop');
+
+        barBot = game.add.sprite(525, 790, 'barBottom');
+        barBot2 = game.add.sprite(65, 790, 'barBottom');
+        bar = game.add.sprite(80, 800, 'bar');
+        bar2 = game.add.sprite(540, 800, 'bar');
+        barTop = game.add.sprite(540, 800, 'barTop');
+        barTop2 = game.add.sprite(80, 800, 'barTop');
+
         width = bar.width;
         width2 = bar.width;
 
@@ -572,10 +713,14 @@ GamePlay.prototype = {
         shoot = false;
         shoot2 = false;
         foodInPlay = true;
+        powerText = game.add.text(30, 750, 'Telekinetic Power', { fontSize: '32px', fill: 'white' });
+        powerText2 = game.add.text(490, 750, 'Telekinetic Power', { fontSize: '32px', fill: 'white' });
         scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-        powerText = game.add.text(10, 750, 'Power: 0', { fontSize: '32px', fill: '#000' });
         scoreText2 = game.add.text(600, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-        powerText2 = game.add.text(550, 750, 'Power: 0', { fontSize: '32px', fill: '#000' });
+        powerText.stroke = 'black';
+        powerText.strokeThickness = 8;
+        powerText2.stroke = 'black';
+        powerText2.strokeThickness = 8;
         TimerText = game.add.text(400, 60, '30', { fontSize: '120px', fill: '#48f442' });
         WinText = game.add.text(16, 60, 'Wins: ', { fontSize: '32px', fill: '#000' });
         WinText = game.add.text(600, 60, 'Wins: ', { fontSize: '32px', fill: '#000' });
@@ -611,9 +756,7 @@ GamePlay.prototype = {
 
     update: function() {
         scoreText.text = 'P1 Score: ' + score;
-        powerText.text = 'P1 Power: ' + speedFactor;
         scoreText2.text = 'P2 Score: ' + score2;
-        powerText2.text = 'P2 Power: ' + speedFactor2;
 
         var cursors = game.input.keyboard.createCursorKeys();
 
@@ -750,14 +893,14 @@ GamePlay.prototype = {
     },
 
     render: function() {
-        game.debug.body(fork);
+        /* game.debug.body(fork);
         game.debug.body(fork2);
         game.debug.body(food);
         game.debug.text('FPS: ' + game.time.fps || 'FPS: -- ', 40, 40, "#00ff00");
 
         //game.debug.text("Time until event: " + game.time.events.duration.toFixed(0), 32, 32);
         //game.debug.text("Next tick: " + game.time.events.next.toFixed(0), 32, 64);
-
+		*/
     }
 
 
@@ -796,4 +939,6 @@ game.state.add('MainMenu', MainMenu);
 game.state.add('GamePlay', GamePlay);
 game.state.add('GameOver', GameOver);
 game.state.add('Round', Round);
+game.state.add('Controls', Controls);
+game.state.add('Leaderboard', Leaderboard);
 game.state.start('MainMenu');
