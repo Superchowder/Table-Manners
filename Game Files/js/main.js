@@ -187,6 +187,9 @@ Round.prototype = {
         game.load.image('Icon', 'myMeat.png');
         game.load.image('food2', 'watermelon.png');
         game.load.image('food3', 'bread.png');
+        game.load.image('food4', 'milk.png');
+        game.load.image('food5', 'pepper.png');
+        game.load.image('food6', 'cookie.png');
         game.load.image('bar', 'PowerBar.png');
         game.load.image('barTop', 'PowerBarTop.png');
         game.load.image('barBottom', 'PowerBarBottom.png');
@@ -359,7 +362,7 @@ function returnFood(x, y) {
     food.body.velocity.x = 0;
     food.body.velocity.y = 0;
     timerEvents[w] = game.time.events.repeat(1000 / 60, 60, () => {
-    	//console.log('i = ' + i);
+        //console.log('i = ' + i);
         let xPos = xDif / i;
         let yPos = yDif / i;
         xDif -= xPos;
@@ -470,6 +473,10 @@ GamePlay.prototype = {
         fork2 = new Fork(game, food, 600, 600, 620, 670, 'fork');
         food2 = game.add.sprite(10000, 10000, 'food2');
         food3 = game.add.sprite(10000, 10000, 'food3');
+        food4 = game.add.sprite(10000, 10000, 'food4');
+        food5 = game.add.sprite(10000, 10000, 'food5');
+        food6 = game.add.sprite(10000, 10000, 'food6');
+
 
         barBot = game.add.sprite(525, 790, 'barBottom');
         barBot2 = game.add.sprite(65, 790, 'barBottom');
@@ -490,11 +497,17 @@ GamePlay.prototype = {
         game.physics.arcade.enable(food2);
         game.physics.arcade.enable(food3);
         game.physics.arcade.enable(food1);
+        game.physics.arcade.enable(food4);
+        game.physics.arcade.enable(food5);
+        game.physics.arcade.enable(food6);
 
         food.anchor.setTo(0.5, 0.5);
         food2.anchor.setTo(0.5, 0.5);
         food3.anchor.setTo(0.5, 0.5);
         food1.anchor.setTo(0.5, 0.5);
+        food4.anchor.setTo(0.5, 0.5);
+        food5.anchor.setTo(0.5, 0.5);
+        food6.anchor.setTo(0.5, 0.5);
 
         winIcon.anchor.setTo(0.5, 0.5);
         winIcon2.anchor.setTo(0.5, 0.5);
@@ -609,15 +622,19 @@ GamePlay.prototype = {
 
 
         //checks for collision
-        game.physics.arcade.collide(fork, food, () => { fork.collision();
-            yelp.play(); }, () => { return fork.enableCollision; });
-        game.physics.arcade.collide(fork2, food, () => { fork2.collision();
-            yelp.play(); }, () => { return fork2.enableCollision; });
+        game.physics.arcade.collide(fork, food, () => {
+            fork.collision();
+            yelp.play();
+        }, () => { return fork.enableCollision; });
+        game.physics.arcade.collide(fork2, food, () => {
+            fork2.collision();
+            yelp.play();
+        }, () => { return fork2.enableCollision; });
         game.physics.arcade.overlap(fork, fork2);
 
-         if (cursors.right.justDown){
-         	console.log("fork enable collision: " + fork.enableCollision );
-         }
+        if (cursors.right.justDown) {
+            console.log("fork enable collision: " + fork.enableCollision);
+        }
 
         //allows the player to eat food if its on their plate
         if (foodInPlay) {
@@ -638,14 +655,20 @@ GamePlay.prototype = {
                 foodEat = false;
                 foodEat2 = false;
                 game.time.events.add(1000, () => {
-                    let r = game.rnd.integerInRange(1, 3);
+                    let r = game.rnd.integerInRange(1, 6);
                     console.log(r);
                     if (r == 1) {
                         food = food1;
                     } else if (r == 2) {
                         food = food2;
-                    } else {
+                    } else if (r == 3) {
                         food = food3;
+                    } else if (r == 4) {
+                        food = food4;
+                    } else if (r == 5) {
+                        food = food5;
+                    } else {
+                        food = food6;
                     }
                     fork.food = fork2.food = food;
                     food.x = 395;
