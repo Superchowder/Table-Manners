@@ -302,26 +302,16 @@ Round.prototype = {
 }
 
 //variable to affect speed of power
-var speedFactor;
-var speedFactor2;
 var up;
+var w;
 var up2;
 var maxSpeed = 100;
-var clockwise;
-var clockwise2;
-var origPos;
-var origPos2;
 var foodEat;
 var foodEat2;
-var enableObstacleCollide;
-var enableObstacleCollide2;
-var didCollide;
-var didCollide2;
 var score;
 var score2;
 var rainbowOn;
 var time;
-var breaker;
 var w;
 var timerEvents = [];
 var timerEvents2 = [];
@@ -347,110 +337,6 @@ function endGame(player, box) {
     game.state.start('GameOver')
 }
 
-//rotates the fork from clockwise to counter clockwise
-function rotation() {
-    if (fork.angle < 110 && clockwise) {
-        fork.angle += 8;
-    } else if (fork.angle >= 110 && clockwise) {
-        clockwise = false;
-    } else if (fork.angle > -110 && !clockwise) {
-        fork.angle -= 8;
-    } else {
-        clockwise = true;
-    }
-}
-
-function powerBar() {
-    if (speedFactor < 99 && up) {
-        speedFactor += 3;
-    } else if (speedFactor >= 99 && up) {
-        up = false;
-    } else if (speedFactor > 3 && !up) {
-        speedFactor -= 3;
-    } else {
-        up = true;
-    }
-}
-
-function powerBar2() {
-    if (speedFactor2 < 99 && up2) {
-        speedFactor2 += 3;
-    } else if (speedFactor2 >= 99 && up2) {
-        up2 = false;
-    } else if (speedFactor2 > 3 && !up2) {
-        speedFactor2 -= 3;
-    } else {
-        up2 = true;
-    }
-}
-
-function rotation2() {
-    if (fork2.angle < 110 && clockwise2) {
-        fork2.angle += 8;
-    } else if (fork2.angle >= 110 && clockwise2) {
-        clockwise2 = false;
-    } else if (fork2.angle > -110 && !clockwise2) {
-        fork2.angle -= 8;
-    } else {
-        clockwise2 = true;
-    }
-}
-
-
-//returns the fork to the original position over 60 frames  and 1 second
-function returnFork() {
-    if (!didCollide) {
-        let i = 60;
-        let xDif = (fork.x - 100);
-        let yDif = (fork.y - 600);
-        fork.body.velocity.x = 0;
-        fork.body.velocity.y = 0;
-        game.time.events.repeat(1000 / 60, 60, () => {
-            let xPos = xDif / i;
-            let yPos = yDif / i;
-            xDif -= xPos;
-            yDif -= yPos;
-            i--;
-            fork.x -= xPos;
-            fork.y -= yPos;
-        }, this);
-
-        game.time.events.add(1000, () => {
-            origPos = true;
-            speedFactor = 0;
-            powerBarHelper = true;
-            enableObstacleCollide = true;
-        }, this);
-    }
-}
-
-function returnFork2() {
-    if (!didCollide2) {
-        let i2 = 60;
-        let xDif2 = (fork2.x - 600);
-        let yDif2 = (fork2.y - 600);
-        fork2.body.velocity.x = 0;
-        fork2.body.velocity.y = 0;
-        game.time.events.repeat(1000 / 60, 60, () => {
-            let xPos2 = xDif2 / i2;
-            let yPos2 = yDif2 / i2;
-            xDif2 -= xPos2;
-            yDif2 -= yPos2;
-            i2--;
-            fork2.x -= xPos2;
-            fork2.y -= yPos2;
-        }, this);
-
-        game.time.events.add(1000, () => {
-            origPos2 = true;
-            speedFactor2 = 0;
-            powerBarHelper2 = true;
-            enableObstacleCollide2 = true;
-        }, this);
-    }
-
-}
-
 //moves the food to the plate 300 550
 //check and see if already pulled or not?
 //pool[w] increase w each pass through then change it back to 0 at end of pull
@@ -460,6 +346,7 @@ function returnFood(x, y) {
     w++;
     if (alreadyPulled) {
         w = 1;
+        console.log("removing events");
         game.time.events.remove(timerEvents[w]);
         game.time.events.remove(timerEvents2[w]);
         foodEat = false;
@@ -472,87 +359,35 @@ function returnFood(x, y) {
     food.body.velocity.x = 0;
     food.body.velocity.y = 0;
     timerEvents[w] = game.time.events.repeat(1000 / 60, 60, () => {
-        if (!breaker) {
-            let xPos = xDif / i;
-            let yPos = yDif / i;
-            xDif -= xPos;
-            yDif -= yPos;
-            i--;
-            food.x -= xPos;
-            food.y -= yPos;
-        }
-
+    	//console.log('i = ' + i);
+        let xPos = xDif / i;
+        let yPos = yDif / i;
+        xDif -= xPos;
+        yDif -= yPos;
+        i--;
+        food.x -= xPos;
+        food.y -= yPos;
     }, this);
 
 
     timerEvents2[w] = game.time.events.add(1200, () => {
         w = 0;
+        console.log("I went off ");
         alreadyPulled = false;
-        if (x == 165) {
+        food.x = x;
+        food.y = y;
+
+        if (fork.isFoodOnPlate()) {
             foodEat = true;
             foodEat2 = false;
         } else {
             foodEat2 = true;
             foodEat = false;
         }
+
+        console.log("isFoodOnPlate: " + fork.isFoodOnPlate());
     }, this);
 
-}
-
-//moves the fork at the angle that it is being rotated at
-function forkMovement() {
-    game.physics.arcade.velocityFromAngle(fork.angle + 90, -5 * speedFactor, fork.body.velocity);
-    origPos = false;
-    game.time.events.add(1000, returnFork, this);
-
-}
-
-//moves the fork at the angle that it is being rotated at
-function forkMovement2() {
-    game.physics.arcade.velocityFromAngle(fork2.angle + 90, -5 * speedFactor2, fork2.body.velocity);
-    origPos2 = false;
-    game.time.events.add(1000, returnFork2, this);
-
-}
-
-//moves all objects upon collision and plays collision sound
-function collision() {
-
-    console.log('collision detected');
-    foodEat2 = false;
-    enableObstacleCollide = false;
-    yelp.play();
-    returnFork();
-    returnFood(165, 680);
-    didCollide = true;
-    food.body.velocity.x = 0;
-    food.body.velocity.y = 0;
-
-}
-
-//moves all objects upon collision and plays collision sound
-function collision2() {
-    console.log('obstacle collision? ' + enableObstacleCollide);
-    console.log('collision detected2');
-    enableObstacleCollide2 = false;
-    foodEat = false;
-    yelp.play();
-    returnFork2();
-    returnFood(620, 670);
-    didCollide2 = true;
-    food.body.velocity.x = 0;
-    food.body.velocity.y = 0;
-
-}
-
-
-//helper function for collision 
-function collisionDetect() {
-    return enableObstacleCollide;
-}
-
-function collisionDetect2() {
-    return enableObstacleCollide2;
 }
 
 function rainbowMaker() {
@@ -606,6 +441,7 @@ function changeTime() {
         if (p1_wins > 2 || p2_wins > 2) {
             game.state.start('GameOver');
         } else {
+            gameMusic.stop();
             game.state.start('Round');
         }
 
@@ -626,13 +462,12 @@ GamePlay.prototype = {
         gameMusic.play(.4);
         gameMusic.loopFull(.4);
         yelp = game.add.audio('yelp');
-        speedFactor = 0;
         //adds all sprites
 
         food = game.add.sprite(395, 270, 'food');
         food1 = game.add.sprite(1000, 100000, 'food');
-        fork = game.add.sprite(100, 600, 'fork');
-        fork2 = game.add.sprite(600, 600, 'fork');
+        fork = new Fork(game, food, 100, 600, 165, 670, 'fork');
+        fork2 = new Fork(game, food, 600, 600, 620, 670, 'fork');
         food2 = game.add.sprite(10000, 10000, 'food2');
         food3 = game.add.sprite(10000, 10000, 'food3');
 
@@ -651,16 +486,10 @@ GamePlay.prototype = {
         winIcon3 = game.add.sprite(3000, 80, 'Icon');
         winIcon4 = game.add.sprite(3000, 80, 'Icon');
 
-
-        game.physics.arcade.enable(fork);
-        game.physics.arcade.enable(fork2);
         game.physics.arcade.enable(food);
         game.physics.arcade.enable(food2);
         game.physics.arcade.enable(food3);
         game.physics.arcade.enable(food1);
-
-        fork.body.setSize(30, 30, 0, 71.5);
-        fork2.body.setSize(30, 30, 0, 71.5);
 
         food.anchor.setTo(0.5, 0.5);
         food2.anchor.setTo(0.5, 0.5);
@@ -672,46 +501,16 @@ GamePlay.prototype = {
         winIcon3.anchor.setTo(0.5, 0.5);
         winIcon4.anchor.setTo(0.5, 0.5);
 
-
-        fork.body.gravity.y = 0;
-        //fork.body.collideWorldBounds = true;
-        fork.body.allowRotation = true;
-        fork.angle = 0;
-        fork.anchor.setTo(0.5, 0.5);
-
-        fork2.body.gravity.y = 0;
-        //fork2.body.collideWorldBounds = true;
-        fork2.body.allowRotation = true;
-        fork2.angle = 0;
-        fork2.anchor.setTo(0.5, 0.5);
-
-
-        y = 0;
-        x = 0;
-        breaker = false;
-        clockwise = true;
+        w = 0;
         up = true;
         up2 = true;
-        powerBarHelper = true;
-        powerBarHelper2 = true;
-        clockwise2 = true;
-        origPos = true;
-        origPos2 = true;
-        enableObstacleCollide = true;
-        enableObstacleCollide2 = true;
-        didCollide = false;
-        didCollide2 = false;
         foodEat = false;
         foodEat2 = false;
         score = 0;
         score2 = 0;
-        speedFactor = 0;
-        speedFactor2 = 0;
         time = 30;
         alreadyPulled = false;
         lastWinner = false;
-        shoot = false;
-        shoot2 = false;
         foodInPlay = true;
         powerText = game.add.text(30, 750, 'Telekinetic Power', { fontSize: '32px', fill: 'white' });
         powerText2 = game.add.text(490, 750, 'Telekinetic Power', { fontSize: '32px', fill: 'white' });
@@ -749,7 +548,13 @@ GamePlay.prototype = {
             winIcon3.x = 715;
         }
 
-
+        let Wkey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+        //moves fork based on power level
+        Wkey.onDown.add(() => {
+            if (fork.isStartPos() && fork.canShoot && fork.speedFactor > 1) {
+                fork.forkMovement();
+            }
+        });
 
     },
 
@@ -760,83 +565,64 @@ GamePlay.prototype = {
 
         var cursors = game.input.keyboard.createCursorKeys();
 
-        let temp = (fork.angle + 90) * (Math.PI / 180);
-        x = Math.cos(temp) * 45;
-        y = Math.sin(temp) * 45;
-
-        if (fork.angle < 0) {
-            fork.body.setSize(30, 30, -x, -y + 69.5);
-        } else {
-            fork.body.setSize(30, 30, -x, -y + 69.5);
+        //only rotates the fork if its in the original position
+        if (fork.isStartPos()) {
+            fork.rotate();
         }
 
-        let temp2 = (fork2.angle + 90) * (Math.PI / 180);
-        let x2 = Math.cos(temp2) * 45;
-        let y2 = Math.sin(temp2) * 45;
-
-        if (fork2.angle < 0) {
-            fork2.body.setSize(30, 30, -x2, -y2 + 69.5);
-        } else {
-            fork2.body.setSize(30, 30, -x2, -y2 + 69.5);
+        if (fork2.isStartPos()) {
+            fork2.rotate();
         }
-
-
 
         //charges the power "bar"
-        if (cursors.down.isDown) {
-            powerBarHelper2 = false;
-            shoot2 = true;
+        if (cursors.down.isDown && !fork2.isFoodOnPlate()) {
+            fork2.canShoot = true;
+            fork2.enableCollision = true;
         }
         //charges the power "bar"
-        if (game.input.keyboard.isDown(Phaser.Keyboard.S)) {
-            powerBarHelper = false;
-            shoot = true;
+        if (game.input.keyboard.isDown(Phaser.Keyboard.S) && !fork.isFoodOnPlate()) {
+            fork.canShoot = true;
+            fork.enableCollision = true;
         }
 
-        if (powerBarHelper) {
-            powerBar();
-            shoot = false;
+        if (fork.isStartPos() && !fork.canShoot) {
+            fork.powerBar();
         }
 
-        if (powerBarHelper2) {
-            powerBar2();
-            shoot2 = false;
+        if (fork2.isStartPos() && !fork2.canShoot) {
+            fork2.powerBar();
         }
 
-        bar.width = width * (speedFactor / 100);
-        bar2.width = width2 * (speedFactor2 / 100);
+        bar.width = width * (fork.speedFactor / 100);
+        bar2.width = width2 * (fork2.speedFactor / 100);
 
-        bar.tint = Math.round((1 - (speedFactor / 100) * 0xFF)) * 65536 + Math.round(((speedFactor / 100) * 0xFF)) * 256;
-        bar2.tint = Math.round((1 - (speedFactor2 / 100) * 0xFF)) * 65536 + Math.round(((speedFactor2 / 100) * 0xFF)) * 256;
+        bar.tint = Math.round((1 - (fork.speedFactor / 100) * 0xFF)) * 65536 + Math.round(((fork.speedFactor / 100) * 0xFF)) * 256;
+        bar2.tint = Math.round((1 - (fork2.speedFactor / 100) * 0xFF)) * 65536 + Math.round(((fork2.speedFactor / 100) * 0xFF)) * 256;
 
 
         //moves fork based on power level
-        if (cursors.up.justDown && origPos2 && shoot2) {
-            if (speedFactor2 > 1) {
-                forkMovement2();
-                didCollide2 = false;
+        if (cursors.up.justDown && fork2.isStartPos() && fork2.canShoot) {
+            if (fork2.speedFactor > 1) {
+                fork2.forkMovement();
             }
         }
 
-        //moves fork based on power level
-        if (game.input.keyboard.isDown(Phaser.Keyboard.W) && origPos && shoot) {
-            if (speedFactor > 1) {
-                forkMovement();
-                didCollide = false;
-            }
-        }
 
         //checks for collision
-        game.physics.arcade.collide(fork, food, collision, collisionDetect);
-        game.physics.arcade.collide(fork2, food, collision2, collisionDetect2);
+        game.physics.arcade.collide(fork, food, () => { fork.collision();
+            yelp.play(); }, () => { return fork.enableCollision; });
+        game.physics.arcade.collide(fork2, food, () => { fork2.collision();
+            yelp.play(); }, () => { return fork2.enableCollision; });
         game.physics.arcade.overlap(fork, fork2);
+
+         if (cursors.right.justDown){
+         	console.log("fork enable collision: " + fork.enableCollision );
+         }
 
         //allows the player to eat food if its on their plate
         if (foodInPlay) {
             if ((game.input.keyboard.isDown(Phaser.Keyboard.A) && foodEat) || (cursors.left.isDown && foodEat2)) {
                 foodInPlay = false;
-                enableObstacleCollide = false;
-                enableObstacleCollide2 = false;
                 game.time.events.remove(timerEvents[w]);
                 game.time.events.remove(timerEvents2[w]);
                 food.x = 1000;
@@ -849,9 +635,6 @@ GamePlay.prototype = {
                     score2 += 10;
                 }
 
-
-                didCollide = false;
-                didCollide2 = false;
                 foodEat = false;
                 foodEat2 = false;
                 game.time.events.add(1000, () => {
@@ -864,6 +647,7 @@ GamePlay.prototype = {
                     } else {
                         food = food3;
                     }
+                    fork.food = fork2.food = food;
                     food.x = 395;
                     food.y = 270;
                     food.revive();
@@ -873,20 +657,9 @@ GamePlay.prototype = {
                     foodEat = false;
                     foodEat2 = false;
                     foodInPlay = true;
-                    enableObstacleCollide = true;
-                    enableObstacleCollide2 = true;
                 }, this);
 
             }
-        }
-
-        //only rotates the fork if its in the original position
-        if (origPos) {
-            rotation();
-        }
-
-        if (origPos2) {
-            rotation2();
         }
 
         //changes game state
