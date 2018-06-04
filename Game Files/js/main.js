@@ -5,57 +5,81 @@ MainMenu.prototype = {
         //loads in text and audio
         game.load.audio('music', 'assets/audio/GameSound.mp3');
         game.load.audio('yelp', 'assets/audio/ouch.mp3');
-        game.load.image('banner', 'assets/img/TM_logo.png');
+        game.load.audio('MainMusic', 'assets/audio/Theme.mp3');
         game.load.image('rated', 'assets/img/rated.jpg');
-        game.load.image('background', 'assets/img/background.jpg');
+        game.load.image('background', 'assets/img/background.png');
         game.load.image('start', 'assets/img/plateStart.png');
         game.load.image('settings', 'assets/img/plateControls.png');
         game.load.image('leaderboard', 'assets/img/plateLead.png');
+        game.load.image('shadow', 'assets/img/plateSettings.png');
         game.load.image('fork', 'assets/img/fork.png');
+        game.load.image('controlBG', 'assets/img/controls.png');
+        game.load.image('leadBG', 'assets/img/leaderboard.png');
         game.load.bitmapFont('font', 'assets/Bitmap/SpaceShip.png', 'assets/Bitmap/SpaceShip.fnt');
     },
     create: function() {
+        if (!MainMusic) {
+            MainMusic = game.add.audio('MainMusic');
+            MainMusic.play(.4);
+            MainMusic.loopFull(.4);
+        }
 
         background = game.add.sprite(0, 0, 'background');
-        banner = game.add.sprite(game.world.centerX, 250, 'banner');
-        banner.anchor.setTo(0.5, 0.5);
-        //rated = game.add.sprite(60, 770, 'rated');
-        //rated.anchor.setTo(0.5, 0.5);
 
         copyright = game.add.text(game.world.centerX, 830, '©2018 HungryBois Inc.', { fontSize: '40px', fill: 'white' });
         copyright.anchor.setTo(0.5, 0.5);
         copyright.scale.set(.40);
 
-        shadow = game.add.sprite(game.world.centerX - 220, 393, 'fork');
-        shadow.alpha = 0.6;
+        shadow = game.add.sprite(game.world.centerX - 220, 243, 'fork');
+        shadow.alpha = 0.5;
         shadow.tint = 0x000000;
         shadow.angle = 90;
-        fork = game.add.sprite(game.world.centerX - 225, 390, 'fork');
+        fork = game.add.sprite(game.world.centerX - 225, 240, 'fork');
         fork.angle = 90;
         fork.anchor.setTo(0.5, 0.5);
         shadow.anchor.setTo(0.5, 0.5);
 
-        shadow2 = game.add.sprite(game.world.centerX + 220, 393, 'fork');
-        shadow2.alpha = 0.6;
+        shadow2 = game.add.sprite(game.world.centerX + 220, 243, 'fork');
+        shadow2.alpha = 0.5;
         shadow2.tint = 0x000000;
         shadow2.angle = -90;
-        fork2 = game.add.sprite(game.world.centerX + 225, 390, 'fork');
+        fork2 = game.add.sprite(game.world.centerX + 225, 240, 'fork');
         fork2.angle = -90;
         fork2.anchor.setTo(0.5, 0.5);
         shadow2.anchor.setTo(0.5, 0.5);
 
-        start = game.add.sprite(game.world.centerX, 400, 'start');
+        shadowSettings = game.add.sprite(game.world.centerX + 10, 395, 'shadow');
+        shadowSettings.alpha = 0.1;
+        shadowSettings.tint = 0x000000;
+        shadowSettings.anchor.setTo(0.5, 0.5);
+
+        shadowLead = game.add.sprite(game.world.centerX + 10, 530, 'shadow');
+        shadowLead.alpha = 0.1;
+        shadowLead.tint = 0x000000;
+        shadowLead.anchor.setTo(0.5, 0.5);
+
+        shadowStart = game.add.sprite(game.world.centerX + 10, 260, 'shadow');
+        shadowStart.alpha = 0.1;
+        shadowStart.tint = 0x000000;
+        shadowStart.anchor.setTo(0.5, 0.5);
+        start = game.add.sprite(game.world.centerX, 250, 'start');
         start.anchor.setTo(0.5, 0.5);
-        settings = game.add.sprite(game.world.centerX, 535, 'settings');
+
+
+
+
+        settings = game.add.sprite(game.world.centerX, 385, 'settings');
         settings.anchor.setTo(0.5, 0.5);
-        lead = game.add.sprite(game.world.centerX, 670, 'leaderboard');
+
+
+        lead = game.add.sprite(game.world.centerX, 520, 'leaderboard');
         lead.anchor.setTo(0.5, 0.5);
 
         start.events.onInputOver.add(() => {
-            fork.y = 390;
-            shadow.y = 393;
-            fork2.y = 390;
-            shadow2.y = 393;
+            fork.y = 240;
+            shadow.y = 243;
+            fork2.y = 240;
+            shadow2.y = 243;
             menu = 1;
         });
 
@@ -65,10 +89,10 @@ MainMenu.prototype = {
         });
 
         settings.events.onInputOver.add(() => {
-            fork.y = 530;
-            shadow.y = 533;
-            fork2.y = 530;
-            shadow2.y = 533;
+            fork.y = 380;
+            shadow.y = 383;
+            fork2.y = 380;
+            shadow2.y = 383;
             menu = 2;
         });
 
@@ -78,16 +102,16 @@ MainMenu.prototype = {
         });
 
         lead.events.onInputOver.add(() => {
-            fork.y = 670;
-            shadow.y = 673;
-            fork2.y = 670;
-            shadow2.y = 673;
+            fork.y = 520;
+            shadow.y = 523;
+            fork2.y = 520;
+            shadow2.y = 523;
             menu = 3;
         });
 
         lead.inputEnabled = true;
         lead.events.onInputDown.add(() => {
-            game.state.start('Leaderboard');
+            game.state.start('GameOver');
         });
 
 
@@ -140,14 +164,34 @@ MainMenu.prototype = {
 var Controls = function(game) {};
 Controls.prototype = {
     preload: function() {
-        background = game.add.sprite(0, 0, 'background');
+        controlBG = game.add.sprite(0, 0, 'controlBG');
+        game.load.image('p1', 'assets/img/P1_instructions.png');
+        game.load.image('p2', 'assets/img/P2_instructions.png');
+
     },
     create: function() {
 
-        controlText = game.add.bitmapText(game.world.centerX, 200, 'font', 'Controls', 64);
-        controlText.anchor.setTo(0.5, 0.5);
-        controlText.tint = 0xFF0000;
+        controlBG = game.add.sprite(0, 0, 'controlBG');
+
+        //controlText = game.add.bitmapText(game.world.centerX, 100, 'font', 'Controls', 64);
+        //controlText.anchor.setTo(0.5, 0.5);
         game.stage.backgroundColor = "#a37041";
+
+        controlText2 = game.add.bitmapText(game.world.centerX, 230, 'font', 'Table Manners is a two player competitve eating game\n\n' +
+            'The goal of the game is to eat more food than your brother', 28);
+        controlText2.anchor.setTo(0.5, 0.5);
+
+        controlText3 = game.add.bitmapText(game.world.centerX - 8, 330, 'font', 'The more telekinetic power you use the further your fork  \n\nwill go', 28);
+        controlText3.anchor.setTo(0.5, 0.5);
+
+        controlText3 = game.add.bitmapText(game.world.centerX - 8, 430, 'font', 'Stealing food is just another part of eating at the dinner \n\ntable', 28);
+        controlText3.anchor.setTo(0.5, 0.5);
+
+
+        p1 = game.add.sprite(game.world.centerX / 2 + 25, 600, 'p1');
+        p2 = game.add.sprite(3 * (game.world.centerX / 2) - 25, 600, 'p2');
+        p1.anchor.setTo(0.5, 0.5);
+        p2.anchor.setTo(0.5, 0.5);
     },
     update: function() {
         if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
@@ -160,12 +204,12 @@ Controls.prototype = {
 var Leaderboard = function(game) {};
 Leaderboard.prototype = {
     preload: function() {
-        background = game.add.sprite(0, 0, 'background');
+        leadBG = game.add.sprite(0, 0, 'leadBG');
     },
     create: function() {
 
-        controlText = game.add.text(game.world.centerX, 200, 'LeaderBoard', { fontSize: '120px', fill: '#48f442' });
-        controlText.anchor.setTo(0.5, 0.5);
+        //leadText = game.add.text(game.world.centerX, 200, 'LeaderBoard', { fontSize: '120px', fill: '#48f442' });
+        //leadText.anchor.setTo(0.5, 0.5);
         game.stage.backgroundColor = "#a37041";
     },
     update: function() {
@@ -183,6 +227,7 @@ Leaderboard.prototype = {
 var Round = function(game) {};
 Round.prototype = {
     preload: function() {
+        MainMusic.stop();
         game.load.path = 'assets/img/';
         game.load.image('table', 'table2.png');
         game.load.image('food', 'sushiroll.png');
@@ -338,6 +383,7 @@ var x;
 var y;
 var foodInPlay;
 var menu;
+var MainMusic;
 
 
 //ends game
@@ -527,7 +573,7 @@ GamePlay.prototype = {
         foodEat2 = false;
         score = 0;
         score2 = 0;
-        time = 5;
+        time = 30;
         alreadyPulled = false;
         lastWinner = false;
         foodInPlay = true;
@@ -710,16 +756,20 @@ var GameOver = function(game) {};
 GameOver.prototype = {
     preload: function() {},
     create: function() {
-        this.add.text(200, 300, 'Game Over', { fontSize: '80px', fill: 'white' });
-        this.add.text(200, 400, 'Try Again?', { fontSize: '80px', fill: 'black' });
-        this.add.text(200, 600, 'Press R to try again', { fontSize: '40px', fill: 'black' });
-        this.add.text(200, 640, 'or  ENTER to go to Main Menu', { fontSize: '40px', fill: 'black' });
+        background = game.add.sprite(0, 0, 'background');
+        GameOver = game.add.bitmapText(game.world.centerX, 200, 'font', 'Game Over', 80);
+        GameOver2 = game.add.bitmapText(game.world.centerX, 425, 'font', 'Press R to Restart', 45);
+        GameOver3 = game.add.bitmapText(game.world.centerX, 500, 'font', 'Press Enter to go to the Main Menu', 45);
+
         if (p1_wins > p2_wins) {
-            this.add.text(150, 100, 'Player 1 WINS!', { fontSize: '80px', fill: 'black' });
+            GameOver4 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 1 WINS!', 80);
         } else {
-            this.add.text(150, 100, 'Player 2 WINS!', { fontSize: '80px', fill: 'black' });
+            GameOver4 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 2 WINS!', 80);
         }
-        game.stage.backgroundColor = "#bb11ee";
+        GameOver.anchor.setTo(0.5, 0.5);
+        GameOver2.anchor.setTo(0.5, 0.5);
+        GameOver3.anchor.setTo(0.5, 0.5);
+        GameOver4.anchor.setTo(0.5, 0.5);
     },
     update: function() {
         //moves to main menu state
