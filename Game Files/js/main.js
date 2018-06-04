@@ -2,24 +2,11 @@ var game = new Phaser.Game(800, 850, Phaser.AUTO);
 var MainMenu = function(game) {};
 MainMenu.prototype = {
     preload: function() {
-        //loads in text and audio
-        game.load.audio('music', 'assets/audio/GameSound.mp3');
-        game.load.audio('yelp', 'assets/audio/ouch.mp3');
-        game.load.audio('MainMusic', 'assets/audio/Theme.mp3');
-        game.load.image('rated', 'assets/img/rated.jpg');
-        game.load.image('background', 'assets/img/background.png');
-        game.load.image('start', 'assets/img/plateStart.png');
-        game.load.image('settings', 'assets/img/plateControls.png');
-        game.load.image('leaderboard', 'assets/img/plateLead.png');
-        game.load.image('shadow', 'assets/img/plateSettings.png');
-        game.load.image('fork', 'assets/img/fork.png');
-        game.load.image('controlBG', 'assets/img/controls.png');
-        game.load.image('leadBG', 'assets/img/leaderboard.png');
-        game.load.bitmapFont('font', 'assets/Bitmap/SpaceShip.png', 'assets/Bitmap/SpaceShip.fnt');
+
     },
     create: function() {
-        if (!MainMusic) {
-            MainMusic = game.add.audio('MainMusic');
+        if (!MainMusic.isPlaying) {
+            //MainMusic = game.add.audio('MainMusic');
             MainMusic.play(.4);
             MainMusic.loopFull(.4);
         }
@@ -165,8 +152,6 @@ var Controls = function(game) {};
 Controls.prototype = {
     preload: function() {
         controlBG = game.add.sprite(0, 0, 'controlBG');
-        game.load.image('p1', 'assets/img/P1_instructions.png');
-        game.load.image('p2', 'assets/img/P2_instructions.png');
 
     },
     create: function() {
@@ -220,14 +205,28 @@ Leaderboard.prototype = {
     }
 }
 
-
-
-
-
-var Round = function(game) {};
-Round.prototype = {
+var Loading = function(game) {};
+Loading.prototype = {
     preload: function() {
-        MainMusic.stop();
+        background = game.add.sprite(0, 0, 'background1');
+        TimerText = game.add.bitmapText(game.world.centerX, game.world.centerY, 'font', 'Loading...', 120);
+        TimerText.anchor.setTo(0.5, 0.5);
+        this.preloadBar = this.add.sprite(game.world.centerX - 100, game.world.centerY + 100, 'bar');
+        this.load.setPreloadSprite(this.preloadBar);
+
+        game.load.audio('music', 'assets/audio/GameSound.mp3');
+        game.load.audio('yelp', 'assets/audio/ouch.mp3');
+        game.load.audio('MainMusic', 'assets/audio/Theme.mp3');
+        game.load.image('rated', 'assets/img/rated.jpg');
+        game.load.image('background', 'assets/img/background.png');
+        game.load.image('start', 'assets/img/plateStart.png');
+        game.load.image('settings', 'assets/img/plateControls.png');
+        game.load.image('leaderboard', 'assets/img/plateLead.png');
+        game.load.image('shadow', 'assets/img/plateSettings.png');
+        game.load.image('fork', 'assets/img/fork.png');
+        game.load.image('controlBG', 'assets/img/controls.png');
+        game.load.image('leadBG', 'assets/img/leaderboard.png');
+
         game.load.path = 'assets/img/';
         game.load.image('table', 'table2.png');
         game.load.image('food', 'sushiroll.png');
@@ -237,11 +236,49 @@ Round.prototype = {
         game.load.image('food4', 'milk.png');
         game.load.image('food5', 'pepper.png');
         game.load.image('food6', 'cookie.png');
-        game.load.image('bar', 'PowerBar.png');
         game.load.image('barTop', 'PowerBarTop.png');
         game.load.image('barBottom', 'PowerBarBottom.png');
+        game.load.image('p1', 'P1_instructions.png');
+        game.load.image('p2', 'P2_instructions.png');
+
+    },
+    create: function() {
+        MainMusic = game.add.audio('MainMusic');
+        //this.preloadBar.cropEnabled = false;
+
+    },
+    update: function() {
+        if (!MainMusic.isDecoding) {
+            game.state.start('MainMenu');
+        }
+
+    }
+}
+
+var PreLoading = function(game) {};
+PreLoading.prototype = {
+    preload: function() {
+        game.load.image('background1', 'assets/img/background.png');
+        game.load.image('bar', 'assets/img/PowerBar.png');
+        game.load.bitmapFont('font', 'assets/Bitmap/SpaceShip.png', 'assets/Bitmap/SpaceShip.fnt');
+    },
+    create: function() {
+
+    },
+    update: function() {
+        game.state.start('Loading');
+
+    }
+}
 
 
+
+
+
+var Round = function(game) {};
+Round.prototype = {
+    preload: function() {
+        MainMusic.stop();
     },
     create: function() {
         table = game.add.sprite(0, 0, 'table');
@@ -754,7 +791,9 @@ GamePlay.prototype = {
 
 var GameOver = function(game) {};
 GameOver.prototype = {
-    preload: function() {},
+    preload: function() {
+    	
+    },
     create: function() {
         background = game.add.sprite(0, 0, 'background');
         GameOver = game.add.bitmapText(game.world.centerX, 200, 'font', 'Game Over', 80);
@@ -791,4 +830,6 @@ game.state.add('GameOver', GameOver);
 game.state.add('Round', Round);
 game.state.add('Controls', Controls);
 game.state.add('Leaderboard', Leaderboard);
-game.state.start('MainMenu');
+game.state.add('Loading', Loading);
+game.state.add('PreLoading', PreLoading);
+game.state.start('PreLoading');

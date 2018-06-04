@@ -4,7 +4,7 @@
   <pages>
     <page id="0" file="SpaceShip.png"/>
   </pages>
-  <chars count="64">
+  <chars count="65">
     <char id="97" x="2" y="2" width="55" height="73" xoffset="0" yoffset="4" xadvance="47" page="0" chnl="15"/>
     <char id="98" x="2" y="77" width="43" height="73" xoffset="1" yoffset="2" xadvance="38" page="0" chnl="15"/>
     <char id="99" x="2" y="152" width="44" height="71" xoffset="0" yoffset="3" xadvance="37" page="0" chnl="15"/>
@@ -69,7 +69,8 @@
     <char id="57" x="509" y="147" width="44" height="73" xoffset="1" yoffset="2" xadvance="37" page="0" chnl="15"/>
     <char id="48" x="519" y="2" width="44" height="71" xoffset="0" yoffset="4" xadvance="37" page="0" chnl="15"/>
     <char id="58" x="495" y="2" width="21" height="43" xoffset="1" yoffset="32" xadvance="15" page="0" chnl="15"/>
-    <char id="32" x="0" y="0" width="0" height="0" xoffset="1" yoffset="32" xadvance="18" page="0" chnl="15"/>
+    <char id="46" x="495" y="47" width="21" height="23" xoffset="1" yoffset="51" xadvance="15" page="0" chnl="15"/>
+    <char id="32" x="0" y="0" width="0" height="0" xoffset="1" yoffset="51" xadvance="18" page="0" chnl="15"/>
   </chars>
   <kernings count="174">
     <kerning first="65" second="67" amount="-4"/>
