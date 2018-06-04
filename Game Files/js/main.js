@@ -12,6 +12,7 @@ MainMenu.prototype = {
         game.load.image('settings', 'assets/img/plateControls.png');
         game.load.image('leaderboard', 'assets/img/plateLead.png');
         game.load.image('fork', 'assets/img/fork.png');
+        game.load.bitmapFont('font', 'assets/Bitmap/SpaceShip.png', 'assets/Bitmap/SpaceShip.fnt');
     },
     create: function() {
 
@@ -143,8 +144,9 @@ Controls.prototype = {
     },
     create: function() {
 
-        controlText = game.add.text(game.world.centerX, 200, 'Controls', { fontSize: '120px', fill: '#48f442' });
+        controlText = game.add.bitmapText(game.world.centerX, 200, 'font', 'Controls', 64);
         controlText.anchor.setTo(0.5, 0.5);
+        controlText.tint = 0xFF0000;
         game.stage.backgroundColor = "#a37041";
     },
     update: function() {
@@ -214,11 +216,10 @@ Round.prototype = {
         fork.anchor.setTo(0.5, 0.5);
         food.anchor.setTo(0.5, 0.5);
         food1.anchor.setTo(0.5, 0.5);
-        TimerText = game.add.text(400, 60, '30', { fontSize: '120px', fill: '#48f442' });
+        TimerText = game.add.bitmapText(400, 60, 'font', '30', 120);
+        //TimerText = game.add.text(400, 60, '30', { fontSize: '120px', fill: '#48f442' });
         TimerText.scale.set(.5);
-        TimerText.stroke = '#000000';
-        TimerText.strokeThickness = 5;
-        TimerText.anchor.set(.5);
+        TimerText.anchor.setTo(.5, .5);
 
         if (p1_wins == 1) {
             winIcon.x = 130;
@@ -238,26 +239,30 @@ Round.prototype = {
             winIcon3.x = 715;
         }
 
-        scoreText = game.add.text(16, 16, 'P1 Score: 0', { fontSize: '32px', fill: '#000' });
-        powerText = game.add.text(30, 750, 'Telekinetic Power', { fontSize: '32px', fill: 'white' });
-        scoreText2 = game.add.text(600, 16, 'P2 Score: 0', { fontSize: '32px', fill: '#000' });
-        powerText2 = game.add.text(490, 750, 'Telekinetic Power', { fontSize: '32px', fill: 'white' });
-        WinText = game.add.text(16, 60, 'Wins: ', { fontSize: '32px', fill: '#000' });
-        WinText = game.add.text(600, 60, 'Wins: ', { fontSize: '32px', fill: '#000' });
-        RoundText = game.add.text(400, 350, 'Round ' + (roundCount + 1), { fontSize: '140px', fill: '#c10f09' });
-        powerText.stroke = 'black';
-        powerText.strokeThickness = 8;
-        powerText2.stroke = 'black';
-        powerText2.strokeThickness = 8;
+        scoreText = game.add.bitmapText(16, 16, 'font', 'P1 Score: 0', 32);
+        powerText = game.add.bitmapText(30, 750, 'font', 'Telekinetic Power', 32);
+        scoreText2 = game.add.bitmapText(600, 16, 'font', 'P2 Score: 0', 32);
+        powerText2 = game.add.bitmapText(490, 750, 'font', 'Telekinetic Power', 30);
+        WinText = game.add.bitmapText(16, 60, 'font', 'Wins: ', 32);
+        WinText2 = game.add.bitmapText(600, 60, 'font', 'Wins: ', 32);
+        RoundText = game.add.bitmapText(400, 350, 'font', 'Round ' + (roundCount + 1), 120);
+
+        barBot = game.add.sprite(525, 790, 'barBottom');
+        barBot2 = game.add.sprite(65, 790, 'barBottom');
+        bar = game.add.sprite(80, 800, 'bar');
+        bar2 = game.add.sprite(540, 800, 'bar');
+        barTop = game.add.sprite(540, 800, 'barTop');
+        barTop2 = game.add.sprite(80, 800, 'barTop');
+        bar.tint = 0x00FF00;
+        bar2.tint = 0x00FF00;
+
 
         if (lastWinner) {
-            WinnerText = game.add.text(400, 350, 'PLAYER 1 WINS! ', { fontSize: '70px', fill: '#c10f09' });
+            WinnerText = game.add.bitmapText(400, 350, 'font', 'PLAYER 1 WINS! ', 70);
         } else {
-            WinnerText = game.add.text(400, 350, 'PLAYER 2 WINS! ', { fontSize: '70px', fill: '#c10f09' });
+            WinnerText = game.add.bitmapText(400, 350, 'font', 'PLAYER 2 WINS! ', 70);
         }
         WinnerText.anchor.set(.5);
-        WinnerText.stroke = '#000000';
-        WinnerText.strokeThickness = 5;
         WinnerText.alpha = 0;
         RoundText.scale.set(.5);
 
@@ -395,18 +400,19 @@ function returnFood(x, y) {
 
 function rainbowMaker() {
     rainbowOn = true;
-    if (TimerText.fill == 'red') {
-        TimerText.fill = 'orange';
-    } else if (TimerText.fill == 'orange') {
-        TimerText.fill = 'yellow';
-    } else if (TimerText.fill == 'yellow') {
-        TimerText.fill = '#48f442';
-    } else if (TimerText.fill == '#48f442') {
-        TimerText.fill = 'blue';
-    } else if (TimerText.fill == 'blue') {
-        TimerText.fill = 'purple';
+
+    if (TimerText.tint == 0xFF0000) {
+        TimerText.tint = 0xe59809;
+    } else if (TimerText.tint == 0xe59809) {
+        TimerText.tint = 0xffda0a;
+    } else if (TimerText.tint == 0xffda0a) {
+        TimerText.tint = 0x48f442;
+    } else if (TimerText.tint == 0x48f442) {
+        TimerText.tint = 0x099dff;
+    } else if (TimerText.tint == 0x099dff) {
+        TimerText.tint = 0xa608ce;
     } else {
-        TimerText.fill = 'red';
+        TimerText.tint = 0xFF0000;
     }
 }
 
@@ -521,21 +527,19 @@ GamePlay.prototype = {
         foodEat2 = false;
         score = 0;
         score2 = 0;
-        time = 30;
+        time = 5;
         alreadyPulled = false;
         lastWinner = false;
         foodInPlay = true;
-        powerText = game.add.text(30, 750, 'Telekinetic Power', { fontSize: '32px', fill: 'white' });
-        powerText2 = game.add.text(490, 750, 'Telekinetic Power', { fontSize: '32px', fill: 'white' });
-        scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-        scoreText2 = game.add.text(600, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-        powerText.stroke = 'black';
-        powerText.strokeThickness = 8;
-        powerText2.stroke = 'black';
-        powerText2.strokeThickness = 8;
-        TimerText = game.add.text(400, 60, '30', { fontSize: '120px', fill: '#48f442' });
-        WinText = game.add.text(16, 60, 'Wins: ', { fontSize: '32px', fill: '#000' });
-        WinText = game.add.text(600, 60, 'Wins: ', { fontSize: '32px', fill: '#000' });
+
+        scoreText = game.add.bitmapText(16, 16, 'font', 'P1 Score: 0', 32);
+        powerText = game.add.bitmapText(30, 750, 'font', 'Telekinetic Power', 32);
+        scoreText2 = game.add.bitmapText(600, 16, 'font', 'P2 Score: 0', 32);
+        powerText2 = game.add.bitmapText(490, 750, 'font', 'Telekinetic Power', 30);
+        WinText = game.add.bitmapText(16, 60, 'font', 'Wins: ', 32);
+        WinText2 = game.add.bitmapText(600, 60, 'font', 'Wins: ', 32);
+
+        TimerText = game.add.bitmapText(400, 60, 'font', '30', 120);
         TimerText.scale.set(.5);
         TimerText.stroke = '#000000';
         TimerText.strokeThickness = 5;
