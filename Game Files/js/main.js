@@ -1,4 +1,5 @@
 var game = new Phaser.Game(800, 850, Phaser.AUTO);
+//localStorage.clear();
 var MainMenu = function(game) {};
 MainMenu.prototype = {
     preload: function() {
@@ -13,9 +14,12 @@ MainMenu.prototype = {
 
         background = game.add.sprite(0, 0, 'background');
 
-        copyright = game.add.text(game.world.centerX, 830, '©2018 HungryBois Inc.', { fontSize: '40px', fill: 'white' });
+        copyright = game.add.text(game.world.centerX, 830, '©2018 HungryBois Games', { fontSize: '40px', fill: 'white' });
         copyright.anchor.setTo(0.5, 0.5);
         copyright.scale.set(.40);
+
+        highscore = 0;
+        highest = 0;
 
         shadow = game.add.sprite(game.world.centerX - 220, 243, 'fork');
         shadow.alpha = 0.5;
@@ -192,9 +196,21 @@ Leaderboard.prototype = {
         leadBG = game.add.sprite(0, 0, 'leadBG');
     },
     create: function() {
+        if (localStorage.getItem('hiscore') != null) {
+            let storedScoreName = localStorage.getItem("playerName");
+            let storedScore = parseInt(localStorage.getItem('hiscore'));
+            leaderText = game.add.bitmapText(game.world.centerX - 30, 200, 'font', "RANK     SCORE        NAME", 64);
+            leaderText2 = game.add.bitmapText(game.world.centerX/8 + 50, 300, 'font', "1.", 64);
+            leaderText3 = game.add.bitmapText(game.world.centerX - 55, 300, 'font', storedScore + " pts", 64);
+            leaderText4 = game.add.bitmapText(game.world.centerX + 240, 300, 'font', storedScoreName, 64);
 
-        //leadText = game.add.text(game.world.centerX, 200, 'LeaderBoard', { fontSize: '120px', fill: '#48f442' });
-        //leadText.anchor.setTo(0.5, 0.5);
+            leaderText2.anchor.setTo(0.5, 0.5);
+            leaderText.anchor.setTo(0.5, 0.5);
+            leaderText3.anchor.setTo(0.5, 0.5);
+            leaderText4.anchor.setTo(0.5, 0.5);
+        } else {
+            //no high score
+        }
         game.stage.backgroundColor = "#a37041";
     },
     update: function() {
@@ -217,7 +233,7 @@ Loading.prototype = {
         game.load.audio('music', 'assets/audio/GameSound.mp3');
         game.load.audio('yelp', 'assets/audio/ouch.mp3');
         game.load.audio('MainMusic', 'assets/audio/Theme.mp3');
-        game.load.image('rated', 'assets/img/rated.jpg');
+        game.load.image('endScreen', 'assets/img/endScreen.png');
         game.load.image('background', 'assets/img/background.png');
         game.load.image('start', 'assets/img/plateStart.png');
         game.load.image('settings', 'assets/img/plateControls.png');
@@ -244,7 +260,11 @@ Loading.prototype = {
     },
     create: function() {
         MainMusic = game.add.audio('MainMusic');
-        //this.preloadBar.cropEnabled = false;
+        if (window.localStorage) {
+            console.log("Local storage Supported");
+        } else {
+            console.log("Local storage not supported")
+        }
 
     },
     update: function() {
@@ -393,6 +413,7 @@ Round.prototype = {
 
 //variable to affect speed of power
 var up;
+var r;
 var w;
 var up2;
 var maxSpeed = 100;
@@ -421,6 +442,8 @@ var y;
 var foodInPlay;
 var menu;
 var MainMusic;
+var highscore;
+var highest;
 
 
 //ends game
@@ -433,11 +456,9 @@ function endGame(player, box) {
 //pool[w] increase w each pass through then change it back to 0 at end of pull
 //game.time.events.remove(pool[w])
 function returnFood(x, y) {
-    console.log('return food');
     w++;
     if (alreadyPulled) {
         w = 1;
-        console.log("removing events");
         game.time.events.remove(timerEvents[w]);
         game.time.events.remove(timerEvents2[w]);
         foodEat = false;
@@ -450,7 +471,6 @@ function returnFood(x, y) {
     food.body.velocity.x = 0;
     food.body.velocity.y = 0;
     timerEvents[w] = game.time.events.repeat(1000 / 60, 60, () => {
-        //console.log('i = ' + i);
         let xPos = xDif / i;
         let yPos = yDif / i;
         xDif -= xPos;
@@ -463,7 +483,6 @@ function returnFood(x, y) {
 
     timerEvents2[w] = game.time.events.add(1200, () => {
         w = 0;
-        console.log("I went off ");
         alreadyPulled = false;
         food.x = x;
         food.y = y;
@@ -475,8 +494,6 @@ function returnFood(x, y) {
             foodEat2 = true;
             foodEat = false;
         }
-
-        console.log("isFoodOnPlate: " + fork.isFoodOnPlate());
     }, this);
 
 }
@@ -521,10 +538,16 @@ function changeTime() {
     } else {
         gameMusic.stop();
         if (score > score2) {
+            if (highest < score) {
+                highest = score;
+            }
             p1_wins++;
             lastWinner = true;
             roundCount++;
         } else {
+            if (highest < score2) {
+                highest = score2;
+            }
             p2_wins++;
             lastWinner = false;
             roundCount++;
@@ -577,6 +600,8 @@ GamePlay.prototype = {
         width = bar.width;
         width2 = bar.width;
 
+        r = 1;
+
         winIcon = game.add.sprite(3000, 80, 'Icon');
         winIcon2 = game.add.sprite(3000, 80, 'Icon');
         winIcon3 = game.add.sprite(3000, 80, 'Icon');
@@ -610,7 +635,7 @@ GamePlay.prototype = {
         foodEat2 = false;
         score = 0;
         score2 = 0;
-        time = 30;
+        time = 3;
         alreadyPulled = false;
         lastWinner = false;
         foodInPlay = true;
@@ -717,11 +742,8 @@ GamePlay.prototype = {
             fork2.collision();
             yelp.play();
         }, () => { return fork2.enableCollision; });
-        game.physics.arcade.overlap(fork, fork2);
 
-        if (cursors.right.justDown) {
-            console.log("fork enable collision: " + fork.enableCollision);
-        }
+        game.physics.arcade.overlap(fork, fork2);
 
         //allows the player to eat food if its on their plate
         if (foodInPlay) {
@@ -731,7 +753,6 @@ GamePlay.prototype = {
                 game.time.events.remove(timerEvents2[w]);
                 food.x = 1000;
                 food.y = 220;
-                food.kill();
 
                 if (foodEat) {
                     score += 10;
@@ -742,8 +763,11 @@ GamePlay.prototype = {
                 foodEat = false;
                 foodEat2 = false;
                 game.time.events.add(1000, () => {
-                    let r = game.rnd.integerInRange(1, 6);
-                    console.log(r);
+                    let temp = r;
+                    r = game.rnd.integerInRange(1, 6);
+                    while (temp === r) {
+                        r = game.rnd.integerInRange(1, 6);
+                    }
                     if (r == 1) {
                         food = food1;
                     } else if (r == 2) {
@@ -761,6 +785,10 @@ GamePlay.prototype = {
                     food.x = 395;
                     food.y = 270;
                     food.revive();
+                    game.time.events.remove(timerEvents[1]);
+                    game.time.events.remove(timerEvents2[1]);
+                    game.time.events.remove(timerEvents[2]);
+                    game.time.events.remove(timerEvents2[2]);
                 }, this);
 
                 game.time.events.add(1500, () => {
@@ -776,14 +804,15 @@ GamePlay.prototype = {
     },
 
     render: function() {
-        /* game.debug.body(fork);
+        /*
+        game.debug.body(fork);
         game.debug.body(fork2);
         game.debug.body(food);
         game.debug.text('FPS: ' + game.time.fps || 'FPS: -- ', 40, 40, "#00ff00");
-
+		*/
         //game.debug.text("Time until event: " + game.time.events.duration.toFixed(0), 32, 32);
         //game.debug.text("Next tick: " + game.time.events.next.toFixed(0), 32, 64);
-		*/
+
     }
 
 
@@ -792,10 +821,50 @@ GamePlay.prototype = {
 var GameOver = function(game) {};
 GameOver.prototype = {
     preload: function() {
-    	
+
     },
     create: function() {
-        background = game.add.sprite(0, 0, 'background');
+
+        //checks for highscore in the local storage
+        if (localStorage.getItem('hiscore') != null) {
+            let storedScore = parseInt(localStorage.getItem('hiscore'));
+            console.log('storedScore: ' + storedScore);
+            //see if current play is higher than stored score
+            if (highest > storedScore) {
+                console.log('new high score: ' + highest);
+                localStorage.setItem('hiscore', highest.toString());
+                highscore = highest;
+                newHighScore = true;
+                var player = prompt("New HighScore, Enter Name", "name");
+                localStorage.setItem("playerName", player);
+            } else {
+                console.log('no new highscore :/');
+                highScore = parseInt(localStorage.getItem('hiscore'));
+                newHighScore = false;
+            }
+            //create local storage if none exists
+        } else {
+            console.log('No hi score stored... creating new');
+
+            var player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "name");
+            while (player.length > 3){
+            	player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "name");
+            }
+            localStorage.setItem("playerName", player);
+            highScore = highest;
+            localStorage.setItem('hiscore', highScore.toString());
+            newHighScore = true;
+
+        }
+
+
+
+
+
+
+
+
+        background = game.add.sprite(0, 0, 'endScreen');
         GameOver = game.add.bitmapText(game.world.centerX, 200, 'font', 'Game Over', 80);
         GameOver2 = game.add.bitmapText(game.world.centerX, 425, 'font', 'Press R to Restart', 45);
         GameOver3 = game.add.bitmapText(game.world.centerX, 500, 'font', 'Press Enter to go to the Main Menu', 45);
@@ -809,6 +878,9 @@ GameOver.prototype = {
         GameOver2.anchor.setTo(0.5, 0.5);
         GameOver3.anchor.setTo(0.5, 0.5);
         GameOver4.anchor.setTo(0.5, 0.5);
+        p1_wins = 0;
+        p2_wins = 0;
+
     },
     update: function() {
         //moves to main menu state

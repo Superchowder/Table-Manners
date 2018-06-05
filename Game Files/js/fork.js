@@ -52,7 +52,6 @@ Fork.prototype.rotate = function() {
 //returns the fork to the original position over 60 frames  and 1 second
 Fork.prototype.returnFork = function() {
     if (!this.isReturning) {
-        console.log("returnFork");
         let i = 60;
         this.isReturning = true;
         let xDif = (this.x - this.initx);
@@ -70,7 +69,7 @@ Fork.prototype.returnFork = function() {
         }, this);
 
         //fix
-        this.game.time.events.add(1030, () => {
+        this.game.time.events.add(1050, () => {
             this.speedFactor = 0;
             this.x = this.initx;
             this.y = this.inity;
