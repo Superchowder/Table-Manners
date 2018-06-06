@@ -196,21 +196,58 @@ Leaderboard.prototype = {
         leadBG = game.add.sprite(0, 0, 'leadBG');
     },
     create: function() {
+        leaderText = game.add.bitmapText(game.world.centerX - 30, 200, 'font', "RANK     SCORE        NAME", 64);
+        leaderText2 = game.add.bitmapText(game.world.centerX / 8 + 50, 300, 'font', "1.", 64);
+        leaderText3 = game.add.bitmapText(game.world.centerX - 55, 300, 'font', "---", 64);
+        leaderText4 = game.add.bitmapText(game.world.centerX + 240, 300, 'font', "---", 64);
+
+        leaderText5 = game.add.bitmapText(game.world.centerX / 8 + 50, 400, 'font', "2.", 64);
+        leaderText6 = game.add.bitmapText(game.world.centerX - 55, 400, 'font', "---", 64);
+        leaderText7 = game.add.bitmapText(game.world.centerX + 240, 400, 'font', "---", 64);
+
+        leaderText8 = game.add.bitmapText(game.world.centerX / 8 + 50, 500, 'font', "3.", 64);
+        leaderText9 = game.add.bitmapText(game.world.centerX - 55, 500, 'font', "---", 64);
+        leaderText10 = game.add.bitmapText(game.world.centerX + 240, 500, 'font', "---", 64);
+
+        leaderText.anchor.setTo(0.5, 0.5);
+        leaderText2.anchor.setTo(0.5, 0.5);
+        leaderText3.anchor.setTo(0.5, 0.5);
+        leaderText4.anchor.setTo(0.5, 0.5);
+
+        leaderText5.anchor.setTo(0.5, 0.5);
+        leaderText6.anchor.setTo(0.5, 0.5);
+        leaderText7.anchor.setTo(0.5, 0.5);
+        leaderText8.anchor.setTo(0.5, 0.5);
+
+        leaderText9.anchor.setTo(0.5, 0.5);
+        leaderText10.anchor.setTo(0.5, 0.5);
+
+
         if (localStorage.getItem('hiscore') != null) {
             let storedScoreName = localStorage.getItem("playerName");
             let storedScore = parseInt(localStorage.getItem('hiscore'));
-            leaderText = game.add.bitmapText(game.world.centerX - 30, 200, 'font', "RANK     SCORE        NAME", 64);
-            leaderText2 = game.add.bitmapText(game.world.centerX/8 + 50, 300, 'font', "1.", 64);
-            leaderText3 = game.add.bitmapText(game.world.centerX - 55, 300, 'font', storedScore + " pts", 64);
-            leaderText4 = game.add.bitmapText(game.world.centerX + 240, 300, 'font', storedScoreName, 64);
+            leaderText3.text = storedScore + " pts";
+            leaderText4.text = storedScoreName;
 
-            leaderText2.anchor.setTo(0.5, 0.5);
-            leaderText.anchor.setTo(0.5, 0.5);
-            leaderText3.anchor.setTo(0.5, 0.5);
-            leaderText4.anchor.setTo(0.5, 0.5);
-        } else {
-            //no high score
         }
+
+        if (localStorage.getItem('hiscore2') != null) {
+            let storedScoreName = localStorage.getItem("playerName2");
+            let storedScore = parseInt(localStorage.getItem('hiscore2'));
+            leaderText6.text = storedScore + " pts";
+            leaderText7.text = storedScoreName;
+
+        }
+
+        if (localStorage.getItem('hiscore3') != null) {
+            let storedScoreName = localStorage.getItem("playerName3");
+            let storedScore = parseInt(localStorage.getItem('hiscore3'));
+            leaderText9.text = storedScore + " pts";
+            leaderText10.text = storedScoreName;
+
+        }
+
+
         game.stage.backgroundColor = "#a37041";
     },
     update: function() {
@@ -635,7 +672,7 @@ GamePlay.prototype = {
         foodEat2 = false;
         score = 0;
         score2 = 0;
-        time = 3;
+        time = 30;
         alreadyPulled = false;
         lastWinner = false;
         foodInPlay = true;
@@ -828,27 +865,80 @@ GameOver.prototype = {
         //checks for highscore in the local storage
         if (localStorage.getItem('hiscore') != null) {
             let storedScore = parseInt(localStorage.getItem('hiscore'));
-            console.log('storedScore: ' + storedScore);
             //see if current play is higher than stored score
             if (highest > storedScore) {
-                console.log('new high score: ' + highest);
                 localStorage.setItem('hiscore', highest.toString());
                 highscore = highest;
                 newHighScore = true;
-                var player = prompt("New HighScore, Enter Name", "name");
+                var storedName1 = localStorage.getItem('playerName');
+                var player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+                while (player == null || player.length > 3) {
+                    player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+                }
                 localStorage.setItem("playerName", player);
+
+                //move second spot to third spot
+                if (localStorage.getItem('hiscore2') != null) {
+                    let storedScore2 = parseInt(localStorage.getItem('hiscore2'));
+                    let storedName = localStorage.getItem('playerName2');
+                    localStorage.setItem('hiscore3', storedScore2.toString());
+                    localStorage.setItem('playerName3', storedName);
+                }
+                //set old score to 2nd spot
+                localStorage.setItem('hiscore2', storedScore.toString());
+                localStorage.setItem('playerName2', storedName1);
             } else {
-                console.log('no new highscore :/');
-                highScore = parseInt(localStorage.getItem('hiscore'));
-                newHighScore = false;
+                if (localStorage.getItem('hiscore2') != null) {
+                    let storedScore = parseInt(localStorage.getItem('hiscore2'));
+                    if (highest > storedScore) {
+                        localStorage.setItem('hiscore2', highest.toString());
+                        let storedName2 = localStorage.getItem('playerName2');
+                        localStorage.setItem('playerName3', storedName2);
+                        var player = prompt("NewpHighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+                        while (player == null || player.length > 3) {
+                            player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+                        }
+                        localStorage.setItem("playerName2", player);
+                        //push old second score to third spot
+                        localStorage.setItem('hiscore3', storedScore.toString());
+                    } else {
+                        if (localStorage.getItem('hiscore3') != null) {
+                            let storedScore = parseInt(localStorage.getItem('hiscore3'));
+                            if (highest > storedScore) {
+                                localStorage.setItem('hiscore3', highest.toString());
+                                var player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+                                while (player == null || player.length > 3) {
+                                    player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+                                }
+                                localStorage.setItem("playerName3", player);
+                            }
+                        } else {
+                            var player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+                            while (player == null || player.length > 3) {
+                                player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+                            }
+                            localStorage.setItem("playerName3", player);
+                            highScore = highest;
+                            localStorage.setItem('hiscore3', highScore.toString());
+                            newHighScore = true;
+                        }
+                    }
+                } else {
+                    var player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+                    while (player == null || player.length > 3) {
+                        player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+                    }
+                    localStorage.setItem("playerName2", player);
+                    highScore = highest;
+                    localStorage.setItem('hiscore2', highScore.toString());
+                    newHighScore = true;
+                }
             }
             //create local storage if none exists
         } else {
-            console.log('No hi score stored... creating new');
-
-            var player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "name");
-            while (player.length > 3){
-            	player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "name");
+            var player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+            while (player == null || player.length > 3) {
+                player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
             }
             localStorage.setItem("playerName", player);
             highScore = highest;
@@ -856,13 +946,6 @@ GameOver.prototype = {
             newHighScore = true;
 
         }
-
-
-
-
-
-
-
 
         background = game.add.sprite(0, 0, 'endScreen');
         GameOver = game.add.bitmapText(game.world.centerX, 200, 'font', 'Game Over', 80);
