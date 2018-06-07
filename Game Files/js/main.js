@@ -8,8 +8,7 @@ MainMenu.prototype = {
     create: function() {
         if (!MainMusic.isPlaying) {
             //MainMusic = game.add.audio('MainMusic');
-            MainMusic.play(.4);
-            MainMusic.loopFull(.4);
+            MainMusic.loopFull(.5);
         }
 
         background = game.add.sprite(0, 0, 'background');
@@ -176,6 +175,9 @@ Controls.prototype = {
         controlText3 = game.add.bitmapText(game.world.centerX - 8, 430, 'font', 'Stealing food is just another part of eating at the dinner \n\ntable', 28);
         controlText3.anchor.setTo(0.5, 0.5);
 
+        controlText4 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press Enter to go to main menu', 40);
+        controlText4.anchor.setTo(0.5, 0.5);
+
 
         p1 = game.add.sprite(game.world.centerX / 2 + 25, 600, 'p1');
         p2 = game.add.sprite(3 * (game.world.centerX / 2) - 25, 600, 'p2');
@@ -202,19 +204,57 @@ Credits.prototype = {
 
     },
     create: function() {
-        creditText2 = game.add.bitmapText(game.world.centerX, 700, 'font', 'Press Enter to go to main menu \n\nPress R to restart', 40);
+        creditText1 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press Enter to go to main menu', 40);
+        creditText1.anchor.setTo(0.5, 0.5);
+
+        creditText2 = game.add.bitmapText(game.world.centerX - 220, 200, 'font', 'Samuel Barish', 40);
         creditText2.anchor.setTo(0.5, 0.5);
+        creditText3 = game.add.bitmapText(game.world.centerX + 140, 203, 'font', 'Programming/Design/Audio', 30);
+        creditText3.anchor.setTo(0.5, 0.5);
+
+        creditText4 = game.add.bitmapText(game.world.centerX - 220, 270, 'font', 'Jinjun Xiao', 40);
+        creditText4.anchor.setTo(0.5, 0.5);
+        creditText5 = game.add.bitmapText(game.world.centerX + 140, 273, 'font', 'Art', 30);
+        creditText5.anchor.setTo(0.5, 0.5);
+
+        creditText6 = game.add.bitmapText(game.world.centerX - 220, 340, 'font', 'Charles Miller', 40);
+        creditText6.anchor.setTo(0.5, 0.5);
+        creditText7 = game.add.bitmapText(game.world.centerX + 140, 343, 'font', 'Design', 30);
+        creditText7.anchor.setTo(0.5, 0.5);
+
+        creditText8 = game.add.bitmapText(game.world.centerX, 410, 'font', 'Special Thanks', 35);
+        creditText8.anchor.setTo(0.5, 0.5);
+
+        creditText6 = game.add.bitmapText(game.world.centerX - 220, 480, 'font', 'Kubbi', 35);
+        creditText6.anchor.setTo(0.5, 0.5);
+        creditText7 = game.add.bitmapText(game.world.centerX + 140, 483, 'font', 'Song "Dolphin Af"', 30);
+        creditText7.anchor.setTo(0.5, 0.5);
+
+        creditText9 = game.add.bitmapText(game.world.centerX - 220, 530, 'font', 'Rhett Dahl', 35);
+        creditText9.anchor.setTo(0.5, 0.5);
+        creditText10 = game.add.bitmapText(game.world.centerX + 140, 535, 'font', 'Song "8bit jazzy theme"', 30);
+        creditText10.anchor.setTo(0.5, 0.5);
+
+        creditText11 = game.add.bitmapText(game.world.centerX - 220, 580, 'font', 'imagex', 35);
+        creditText11.anchor.setTo(0.5, 0.5);
+        creditText12 = game.add.bitmapText(game.world.centerX + 140, 583, 'font', 'font "Supersonic Rocketship"', 30);
+        creditText12.anchor.setTo(0.5, 0.5);
+
+        creditText11 = game.add.bitmapText(game.world.centerX - 220, 630, 'font', 'Nick Forester', 35);
+        creditText11.anchor.setTo(0.5, 0.5);
+        creditText12 = game.add.bitmapText(game.world.centerX + 140, 633, 'font', 'Always being there ', 30);
+        creditText12.anchor.setTo(0.5, 0.5);
+
+        creditText13 = game.add.bitmapText(game.world.centerX, 690, 'font', 'Nathan Altice and Elizabeth  Swensen', 35);
+        creditText13.anchor.setTo(0.5, 0.5);
+        creditText12 = game.add.bitmapText(game.world.centerX, 740, 'font', 'Without them none of this would have been possible ', 30);
+        creditText12.anchor.setTo(0.5, 0.5);
+
     },
     update: function() {
         if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
             game.state.start('MainMenu');
         }
-
-        if (game.input.keyboard.isDown(Phaser.Keyboard.R)) {
-            roundCount = 0;
-            game.state.start('Round');
-        }
-
     }
 }
 
@@ -236,6 +276,9 @@ Leaderboard.prototype = {
         leaderText8 = game.add.bitmapText(game.world.centerX / 8 + 50, 500, 'font', "3.", 64);
         leaderText9 = game.add.bitmapText(game.world.centerX - 55, 500, 'font', "---", 64);
         leaderText10 = game.add.bitmapText(game.world.centerX + 240, 500, 'font', "---", 64);
+
+        leaderText11 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press Enter to go to main menu', 40);
+        leaderText11.anchor.setTo(0.5, 0.5);
 
         leaderText.anchor.setTo(0.5, 0.5);
         leaderText2.anchor.setTo(0.5, 0.5);
@@ -640,8 +683,7 @@ GamePlay.prototype = {
 
         //audio
         gameMusic = game.add.audio('music');
-        gameMusic.play(.4);
-        gameMusic.loopFull(.4);
+        gameMusic.loopFull(.5);
         yelp = game.add.audio('yelp');
         //adds all sprites
 
@@ -766,7 +808,7 @@ GamePlay.prototype = {
         }
 
         //moves fork based on power level
-        if (cursors.down.justDown && fork2.isStartPos() && fork2.canShoot) {
+        if (cursors.up.justDown && fork2.isStartPos() && fork2.canShoot) {
             if (fork2.speedFactor > 1) {
                 fork2.forkMovement();
             }
@@ -811,7 +853,7 @@ GamePlay.prototype = {
 
         //allows the player to eat food if its on their plate
         if (foodInPlay) {
-            if ((game.input.keyboard.isDown(Phaser.Keyboard.A) && foodEat) || (cursors.up.isDown && foodEat2)) {
+            if ((game.input.keyboard.isDown(Phaser.Keyboard.A) && foodEat) || (cursors.left.isDown && foodEat2)) {
                 foodInPlay = false;
                 game.time.events.remove(timerEvents[w]);
                 game.time.events.remove(timerEvents2[w]);
