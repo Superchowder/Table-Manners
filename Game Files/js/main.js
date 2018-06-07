@@ -187,6 +187,34 @@ Controls.prototype = {
             game.state.start('MainMenu');
         }
 
+        if (game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+            roundCount = 0;
+            game.state.start('Round');
+        }
+
+    }
+}
+
+var Credits = function(game) {};
+Credits.prototype = {
+    preload: function() {
+        creditsBG = game.add.sprite(0, 0, 'creditsBG');
+
+    },
+    create: function() {
+        creditText2 = game.add.bitmapText(game.world.centerX, 700, 'font', 'Press Enter to go to main menu \n\nPress R to restart', 40);
+        creditText2.anchor.setTo(0.5, 0.5);
+    },
+    update: function() {
+        if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
+            game.state.start('MainMenu');
+        }
+
+        if (game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+            roundCount = 0;
+            game.state.start('Round');
+        }
+
     }
 }
 
@@ -270,8 +298,9 @@ Loading.prototype = {
         game.load.audio('music', 'assets/audio/GameSound.mp3');
         game.load.audio('yelp', 'assets/audio/ouch.mp3');
         game.load.audio('MainMusic', 'assets/audio/Theme.mp3');
-        game.load.image('endScreen', 'assets/img/endScreen.png');
+        game.load.image('endScreen', 'assets/img/endscreen.png');
         game.load.image('background', 'assets/img/background.png');
+        game.load.image('creditsBG', 'assets/img/credits.png');
         game.load.image('start', 'assets/img/plateStart.png');
         game.load.image('settings', 'assets/img/plateControls.png');
         game.load.image('leaderboard', 'assets/img/plateLead.png');
@@ -736,6 +765,13 @@ GamePlay.prototype = {
             fork2.rotate();
         }
 
+        //moves fork based on power level
+        if (cursors.down.justDown && fork2.isStartPos() && fork2.canShoot) {
+            if (fork2.speedFactor > 1) {
+                fork2.forkMovement();
+            }
+        }
+
         //charges the power "bar"
         if (cursors.down.isDown && !fork2.isFoodOnPlate()) {
             fork2.canShoot = true;
@@ -761,15 +797,6 @@ GamePlay.prototype = {
         bar.tint = Math.round((1 - (fork.speedFactor / 100) * 0xFF)) * 65536 + Math.round(((fork.speedFactor / 100) * 0xFF)) * 256;
         bar2.tint = Math.round((1 - (fork2.speedFactor / 100) * 0xFF)) * 65536 + Math.round(((fork2.speedFactor / 100) * 0xFF)) * 256;
 
-
-        //moves fork based on power level
-        if (cursors.up.justDown && fork2.isStartPos() && fork2.canShoot) {
-            if (fork2.speedFactor > 1) {
-                fork2.forkMovement();
-            }
-        }
-
-
         //checks for collision
         game.physics.arcade.collide(fork, food, () => {
             fork.collision();
@@ -784,7 +811,7 @@ GamePlay.prototype = {
 
         //allows the player to eat food if its on their plate
         if (foodInPlay) {
-            if ((game.input.keyboard.isDown(Phaser.Keyboard.A) && foodEat) || (cursors.left.isDown && foodEat2)) {
+            if ((game.input.keyboard.isDown(Phaser.Keyboard.A) && foodEat) || (cursors.up.isDown && foodEat2)) {
                 foodInPlay = false;
                 game.time.events.remove(timerEvents[w]);
                 game.time.events.remove(timerEvents2[w]);
@@ -951,16 +978,18 @@ GameOver.prototype = {
         GameOver = game.add.bitmapText(game.world.centerX, 200, 'font', 'Game Over', 80);
         GameOver2 = game.add.bitmapText(game.world.centerX, 425, 'font', 'Press R to Restart', 45);
         GameOver3 = game.add.bitmapText(game.world.centerX, 500, 'font', 'Press Enter to go to the Main Menu', 45);
+        GameOver4 = game.add.bitmapText(game.world.centerX, 575, 'font', 'Press C to see the CREDITS', 45);
 
         if (p1_wins > p2_wins) {
-            GameOver4 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 1 WINS!', 80);
+            GameOver5 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 1 WINS!', 80);
         } else {
-            GameOver4 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 2 WINS!', 80);
+            GameOver5 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 2 WINS!', 80);
         }
         GameOver.anchor.setTo(0.5, 0.5);
         GameOver2.anchor.setTo(0.5, 0.5);
         GameOver3.anchor.setTo(0.5, 0.5);
         GameOver4.anchor.setTo(0.5, 0.5);
+        GameOver5.anchor.setTo(0.5, 0.5);
         p1_wins = 0;
         p2_wins = 0;
 
@@ -975,6 +1004,10 @@ GameOver.prototype = {
             roundCount = 0;
             game.state.start('Round');
         }
+
+        if (game.input.keyboard.isDown(Phaser.Keyboard.C)) {
+            game.state.start('Credits');
+        }
     }
 }
 
@@ -987,4 +1020,5 @@ game.state.add('Controls', Controls);
 game.state.add('Leaderboard', Leaderboard);
 game.state.add('Loading', Loading);
 game.state.add('PreLoading', PreLoading);
+game.state.add('Credits', Credits);
 game.state.start('PreLoading');
