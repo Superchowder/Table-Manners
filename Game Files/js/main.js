@@ -165,15 +165,15 @@ Controls.prototype = {
         //controlText.anchor.setTo(0.5, 0.5);
         game.stage.backgroundColor = "#a37041";
 
-        controlText2 = game.add.bitmapText(game.world.centerX, 230, 'font', 'Table Manners is a two player competitve eating game\n\n' +
-            'The goal of the game is to eat more food than your brother', 28);
+        controlText2 = game.add.bitmapText(game.world.centerX, 230, 'font', 'Table Manners is a two player competitve eating game.\n\n' +
+            'The goal of the game is to eat more food than your sibling', 28);
         controlText2.anchor.setTo(0.5, 0.5);
 
-        controlText3 = game.add.bitmapText(game.world.centerX - 8, 330, 'font', 'The more telekinetic power you use the further your fork  \n\nwill go', 28);
+        controlText3 = game.add.bitmapText(178, 300, 'font', 'by any means necessary.', 28);
         controlText3.anchor.setTo(0.5, 0.5);
 
-        controlText3 = game.add.bitmapText(game.world.centerX - 8, 430, 'font', 'Stealing food is just another part of eating at the dinner \n\ntable', 28);
-        controlText3.anchor.setTo(0.5, 0.5);
+        controlText3 = game.add.bitmapText(16, 350, 'font', 'Eat more food in this 5 course meal experience to win.', 28);
+        //controlText3.anchor.setTo(0.5, 0.5);
 
         controlText4 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press Enter to go to main menu', 40);
         controlText4.anchor.setTo(0.5, 0.5);
@@ -183,6 +183,8 @@ Controls.prototype = {
         p2 = game.add.sprite(3 * (game.world.centerX / 2) - 25, 600, 'p2');
         p1.anchor.setTo(0.5, 0.5);
         p2.anchor.setTo(0.5, 0.5);
+        p1.scale.set(.35);
+        p2.scale.set(.35);
     },
     update: function() {
         if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
@@ -222,7 +224,7 @@ Credits.prototype = {
         creditText7 = game.add.bitmapText(game.world.centerX + 140, 343, 'font', 'Design', 30);
         creditText7.anchor.setTo(0.5, 0.5);
 
-        creditText8 = game.add.bitmapText(game.world.centerX, 410, 'font', 'Special Thanks', 35);
+        creditText8 = game.add.bitmapText(game.world.centerX, 420, 'font', 'Special Thanks', 35);
         creditText8.anchor.setTo(0.5, 0.5);
 
         creditText6 = game.add.bitmapText(game.world.centerX - 220, 480, 'font', 'Kubbi', 35);
@@ -242,18 +244,59 @@ Credits.prototype = {
 
         creditText11 = game.add.bitmapText(game.world.centerX - 220, 630, 'font', 'Nick Forester', 35);
         creditText11.anchor.setTo(0.5, 0.5);
-        creditText12 = game.add.bitmapText(game.world.centerX + 140, 633, 'font', 'Always being there ', 30);
+        creditText12 = game.add.bitmapText(game.world.centerX + 140, 633, 'font', 'Consultant', 30);
         creditText12.anchor.setTo(0.5, 0.5);
 
-        creditText13 = game.add.bitmapText(game.world.centerX, 690, 'font', 'Nathan Altice and Elizabeth  Swensen', 35);
-        creditText13.anchor.setTo(0.5, 0.5);
-        creditText12 = game.add.bitmapText(game.world.centerX, 740, 'font', 'Without them none of this would have been possible ', 30);
-        creditText12.anchor.setTo(0.5, 0.5);
+        food = game.add.sprite(100, 715, 'food');
+        food2 = game.add.sprite(300, 715, 'food2');
+        food3 = game.add.sprite(500, 715, 'food3');
+        food4 = game.add.sprite(700, 715, 'food4');
+        food5 = game.add.sprite(900, 715, 'food5');
+        food6 = game.add.sprite(1100, 715, 'food6');
+        food.anchor.setTo(0.5, 0.5);
+        food2.anchor.setTo(0.5, 0.5);
+        food3.anchor.setTo(0.5, 0.5);
+        food4.anchor.setTo(0.5, 0.5);
+        food5.anchor.setTo(0.5, 0.5);
+        food6.anchor.setTo(0.5, 0.5);
+        food.scale.set(0.8);
+        food2.scale.set(0.8);
+        food3.scale.set(0.8);
+        food4.scale.set(0.8);
+        food5.scale.set(0.8);
+        food6.scale.set(0.8);
+
 
     },
     update: function() {
         if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
             game.state.start('MainMenu');
+        }
+
+        food.x -= 1;
+        food2.x -= 1;
+        food3.x -= 1;
+        food4.x -= 1;
+        food5.x -= 1;
+        food6.x -= 1;
+
+        if (food.x <= -100) {
+            food.x = 1100;
+        }
+        if (food2.x <= -100) {
+            food2.x = 1100;
+        }
+        if (food3.x <= -100) {
+            food3.x = 1100;
+        }
+        if (food4.x <= -100) {
+            food4.x = 1100;
+        }
+        if (food5.x <= -100) {
+            food5.x = 1100;
+        }
+        if (food6.x <= -100) {
+            food6.x = 1100;
         }
     }
 }
@@ -363,8 +406,8 @@ Loading.prototype = {
         game.load.image('food6', 'cookie.png');
         game.load.image('barTop', 'PowerBarTop.png');
         game.load.image('barBottom', 'PowerBarBottom.png');
-        game.load.image('p1', 'P1_instructions.png');
-        game.load.image('p2', 'P2_instructions.png');
+        game.load.image('p1', 'P1_controls.png');
+        game.load.image('p2', 'P2_controls.png');
 
     },
     create: function() {
@@ -456,7 +499,7 @@ Round.prototype = {
         powerText2 = game.add.bitmapText(490, 750, 'font', 'Telekinetic Power', 30);
         WinText = game.add.bitmapText(16, 60, 'font', 'Wins: ', 32);
         WinText2 = game.add.bitmapText(600, 60, 'font', 'Wins: ', 32);
-        RoundText = game.add.bitmapText(400, 350, 'font', 'Round ' + (roundCount + 1), 120);
+        RoundText = game.add.bitmapText(400, 350, 'font', 'Course ' + (roundCount + 1), 120);
 
         barBot = game.add.sprite(525, 790, 'barBottom');
         barBot2 = game.add.sprite(65, 790, 'barBottom');
@@ -1017,10 +1060,10 @@ GameOver.prototype = {
         }
 
         background = game.add.sprite(0, 0, 'endScreen');
-        GameOver = game.add.bitmapText(game.world.centerX, 200, 'font', 'Game Over', 80);
-        GameOver2 = game.add.bitmapText(game.world.centerX, 425, 'font', 'Press R to Restart', 45);
+        GameOver = game.add.bitmapText(game.world.centerX, 200, 'font', 'Meal Over', 80);
+        GameOver2 = game.add.bitmapText(game.world.centerX, 425, 'font', 'Press R to start a new meal', 45);
         GameOver3 = game.add.bitmapText(game.world.centerX, 500, 'font', 'Press Enter to go to the Main Menu', 45);
-        GameOver4 = game.add.bitmapText(game.world.centerX, 575, 'font', 'Press C to see the CREDITS', 45);
+        GameOver4 = game.add.bitmapText(game.world.centerX, 575, 'font', 'Press C to see the all the Cooks', 45);
 
         if (p1_wins > p2_wins) {
             GameOver5 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 1 WINS!', 80);
