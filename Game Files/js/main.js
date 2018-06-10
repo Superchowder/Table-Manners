@@ -1,25 +1,28 @@
 var game = new Phaser.Game(800, 850, Phaser.AUTO);
-//localStorage.clear();
 var MainMenu = function(game) {};
 MainMenu.prototype = {
     preload: function() {
 
     },
     create: function() {
+        //only plays music if it isn't already playing
         if (!MainMusic.isPlaying) {
-            //MainMusic = game.add.audio('MainMusic');
             MainMusic.loopFull(.5);
         }
 
+        //adds background image
         background = game.add.sprite(0, 0, 'background');
 
+        //adds joke copyright text 
         copyright = game.add.text(game.world.centerX, 830, '©2018 HungryBois Games', { fontSize: '40px', fill: 'white' });
         copyright.anchor.setTo(0.5, 0.5);
         copyright.scale.set(.40);
 
+        //sets highscore
         highscore = 0;
         highest = 0;
 
+        //adds shadows and forks to selection menu
         shadow = game.add.sprite(game.world.centerX - 220, 243, 'fork');
         shadow.alpha = 0.5;
         shadow.tint = 0x000000;
@@ -28,7 +31,6 @@ MainMenu.prototype = {
         fork.angle = 90;
         fork.anchor.setTo(0.5, 0.5);
         shadow.anchor.setTo(0.5, 0.5);
-
         shadow2 = game.add.sprite(game.world.centerX + 220, 243, 'fork');
         shadow2.alpha = 0.5;
         shadow2.tint = 0x000000;
@@ -37,34 +39,28 @@ MainMenu.prototype = {
         fork2.angle = -90;
         fork2.anchor.setTo(0.5, 0.5);
         shadow2.anchor.setTo(0.5, 0.5);
-
         shadowSettings = game.add.sprite(game.world.centerX + 10, 395, 'shadow');
         shadowSettings.alpha = 0.1;
         shadowSettings.tint = 0x000000;
         shadowSettings.anchor.setTo(0.5, 0.5);
-
         shadowLead = game.add.sprite(game.world.centerX + 10, 530, 'shadow');
         shadowLead.alpha = 0.1;
         shadowLead.tint = 0x000000;
         shadowLead.anchor.setTo(0.5, 0.5);
-
         shadowStart = game.add.sprite(game.world.centerX + 10, 260, 'shadow');
         shadowStart.alpha = 0.1;
         shadowStart.tint = 0x000000;
         shadowStart.anchor.setTo(0.5, 0.5);
+
+        //adds button sprites
         start = game.add.sprite(game.world.centerX, 250, 'start');
         start.anchor.setTo(0.5, 0.5);
-
-
-
-
         settings = game.add.sprite(game.world.centerX, 385, 'settings');
         settings.anchor.setTo(0.5, 0.5);
-
-
         lead = game.add.sprite(game.world.centerX, 520, 'leaderboard');
         lead.anchor.setTo(0.5, 0.5);
 
+        //moves forks based on where mouse is and starts states of the game based on what sprite the mouse clicks
         start.events.onInputOver.add(() => {
             fork.y = 240;
             shadow.y = 243;
@@ -104,18 +100,15 @@ MainMenu.prototype = {
             game.state.start('GameOver');
         });
 
-
-
         p1_wins = 0;
         p2_wins = 0;
         roundCount = 0;
         menu = 1;
-
-        game.stage.backgroundColor = "#a37041";
     },
     update: function() {
         var cursors = game.input.keyboard.createCursorKeys();
 
+        //lets user also use up and down arrows and move through the menu
         if (cursors.down.justDown && menu < 3) {
             fork.y += 140;
             shadow.y += 140;
@@ -147,10 +140,6 @@ MainMenu.prototype = {
     }
 }
 
-
-
-
-
 var Controls = function(game) {};
 Controls.prototype = {
     preload: function() {
@@ -158,27 +147,20 @@ Controls.prototype = {
 
     },
     create: function() {
-
+        //adds background to state
         controlBG = game.add.sprite(0, 0, 'controlBG');
 
-        //controlText = game.add.bitmapText(game.world.centerX, 100, 'font', 'Controls', 64);
-        //controlText.anchor.setTo(0.5, 0.5);
-        game.stage.backgroundColor = "#a37041";
-
+        //adds text to state
         controlText2 = game.add.bitmapText(game.world.centerX, 230, 'font', 'Table Manners is a two player competitve eating game.\n\n' +
             'The goal of the game is to eat more food than your sibling', 28);
         controlText2.anchor.setTo(0.5, 0.5);
-
         controlText3 = game.add.bitmapText(178, 300, 'font', 'by any means necessary.', 28);
         controlText3.anchor.setTo(0.5, 0.5);
-
-        controlText3 = game.add.bitmapText(16, 350, 'font', 'Eat more food in this 5 course meal experience to win.', 28);
-        //controlText3.anchor.setTo(0.5, 0.5);
-
+        controlText3 = game.add.bitmapText(16, 350, 'font', 'Eat more food in each course, best 3 out of 5, to win.', 28);
         controlText4 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press "Enter" to go to main menu', 40);
         controlText4.anchor.setTo(0.5, 0.5);
 
-
+        //adds instructional sprites to game
         p1 = game.add.sprite(game.world.centerX / 2 + 25, 600, 'p1');
         p2 = game.add.sprite(3 * (game.world.centerX / 2) - 25, 600, 'p2');
         p1.anchor.setTo(0.5, 0.5);
@@ -187,6 +169,7 @@ Controls.prototype = {
         p2.scale.set(.35);
     },
     update: function() {
+        //changes game states
         if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
             game.state.start('MainMenu');
         }
@@ -206,47 +189,38 @@ Credits.prototype = {
 
     },
     create: function() {
+        //adds text to credits
         creditText1 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press "Enter" to go to main menu', 40);
         creditText1.anchor.setTo(0.5, 0.5);
-
-        creditText2 = game.add.bitmapText(32, 200, 'font', 'Programming/Design/Audio', 30);
-        //creditText2.anchor.setTo(0.5, 0.5);
-        creditText3 = game.add.bitmapText(game.world.centerX + 165, 213, 'font', 'Samuel Barish', 30);
+        creditText2 = game.add.bitmapText(32, 200, 'font', 'Programming/Design', 35);
+        creditText3 = game.add.bitmapText(game.world.centerX + 169, 216, 'font', 'Samuel Barish', 35);
         creditText3.anchor.setTo(0.5, 0.5);
-
-        creditText4 = game.add.bitmapText(32, 265, 'font', 'Art', 30);
-        //creditText4.anchor.setTo(0.5, 0.5);
-        creditText5 = game.add.bitmapText(game.world.centerX + 140, 285, 'font', 'Jinjun Xiao', 30);
+        creditText4 = game.add.bitmapText(32, 268, 'font', 'Art', 35);
+        creditText5 = game.add.bitmapText(game.world.centerX + 140, 285, 'font', 'Jinjun Xiao', 35);
         creditText5.anchor.setTo(0.5, 0.5);
-
-        creditText6 = game.add.bitmapText(32, 335, 'font', 'Design', 30);
-        //creditText6.anchor.setTo(0.5, 0.5);
-        creditText7 = game.add.bitmapText(game.world.centerX + 160, 350, 'font', 'Charles Miller', 30);
+        creditText6 = game.add.bitmapText(32, 335, 'font', 'Design', 35);
+        creditText7 = game.add.bitmapText(game.world.centerX + 163, 353, 'font', 'Charles Miller', 35);
         creditText7.anchor.setTo(0.5, 0.5);
-
         creditText8 = game.add.bitmapText(game.world.centerX, 420, 'font', 'Special Thanks', 35);
         creditText8.anchor.setTo(0.5, 0.5);
-
         creditText6 = game.add.bitmapText(game.world.centerX - 220, 480, 'font', 'Kubbi', 35);
         creditText6.anchor.setTo(0.5, 0.5);
         creditText7 = game.add.bitmapText(game.world.centerX + 140, 483, 'font', 'Song "Dolphin Af"', 30);
         creditText7.anchor.setTo(0.5, 0.5);
-
         creditText9 = game.add.bitmapText(game.world.centerX - 220, 530, 'font', 'Rhett Dahl', 35);
         creditText9.anchor.setTo(0.5, 0.5);
         creditText10 = game.add.bitmapText(game.world.centerX + 140, 535, 'font', 'Song "8bit jazzy theme"', 30);
         creditText10.anchor.setTo(0.5, 0.5);
-
         creditText11 = game.add.bitmapText(game.world.centerX - 220, 580, 'font', 'imagex', 35);
         creditText11.anchor.setTo(0.5, 0.5);
         creditText12 = game.add.bitmapText(game.world.centerX + 140, 583, 'font', 'font "Supersonic Rocketship"', 30);
         creditText12.anchor.setTo(0.5, 0.5);
-
         creditText11 = game.add.bitmapText(game.world.centerX - 220, 630, 'font', 'Nick Forester', 35);
         creditText11.anchor.setTo(0.5, 0.5);
         creditText12 = game.add.bitmapText(game.world.centerX + 140, 633, 'font', 'Consultant', 30);
         creditText12.anchor.setTo(0.5, 0.5);
 
+        //adds rotating food sprites
         food = game.add.sprite(100, 715, 'food');
         food2 = game.add.sprite(300, 715, 'food2');
         food3 = game.add.sprite(500, 715, 'food3');
@@ -265,14 +239,14 @@ Credits.prototype = {
         food4.scale.set(0.8);
         food5.scale.set(0.8);
         food6.scale.set(0.8);
-
-
     },
     update: function() {
+        //changes states
         if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
             game.state.start('MainMenu');
         }
 
+        //moves food to the left
         food.x -= 1;
         food2.x -= 1;
         food3.x -= 1;
@@ -280,6 +254,7 @@ Credits.prototype = {
         food5.x -= 1;
         food6.x -= 1;
 
+        //rotates foods to the back of the queue once they go offscreen
         if (food.x <= -100) {
             food.x = 1100;
         }
@@ -307,36 +282,31 @@ Leaderboard.prototype = {
         leadBG = game.add.sprite(0, 0, 'leadBG');
     },
     create: function() {
+        //adds leaderboard text
         leaderText = game.add.bitmapText(game.world.centerX - 30, 200, 'font', "RANK     SCORE        NAME", 64);
         leaderText2 = game.add.bitmapText(game.world.centerX / 8 + 50, 300, 'font', "1.", 64);
         leaderText3 = game.add.bitmapText(game.world.centerX - 55, 300, 'font', "---", 64);
         leaderText4 = game.add.bitmapText(game.world.centerX + 240, 300, 'font', "---", 64);
-
         leaderText5 = game.add.bitmapText(game.world.centerX / 8 + 50, 400, 'font', "2.", 64);
         leaderText6 = game.add.bitmapText(game.world.centerX - 55, 400, 'font', "---", 64);
         leaderText7 = game.add.bitmapText(game.world.centerX + 240, 400, 'font', "---", 64);
-
         leaderText8 = game.add.bitmapText(game.world.centerX / 8 + 50, 500, 'font', "3.", 64);
         leaderText9 = game.add.bitmapText(game.world.centerX - 55, 500, 'font', "---", 64);
         leaderText10 = game.add.bitmapText(game.world.centerX + 240, 500, 'font', "---", 64);
-
         leaderText11 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press "Enter" to go to main menu', 40);
         leaderText11.anchor.setTo(0.5, 0.5);
-
         leaderText.anchor.setTo(0.5, 0.5);
         leaderText2.anchor.setTo(0.5, 0.5);
         leaderText3.anchor.setTo(0.5, 0.5);
         leaderText4.anchor.setTo(0.5, 0.5);
-
         leaderText5.anchor.setTo(0.5, 0.5);
         leaderText6.anchor.setTo(0.5, 0.5);
         leaderText7.anchor.setTo(0.5, 0.5);
         leaderText8.anchor.setTo(0.5, 0.5);
-
         leaderText9.anchor.setTo(0.5, 0.5);
         leaderText10.anchor.setTo(0.5, 0.5);
 
-
+        //gets hiscores from the stored data
         if (localStorage.getItem('hiscore') != null) {
             let storedScoreName = localStorage.getItem("playerName");
             let storedScore = parseInt(localStorage.getItem('hiscore'));
@@ -360,21 +330,19 @@ Leaderboard.prototype = {
             leaderText10.text = storedScoreName;
 
         }
-
-
-        game.stage.backgroundColor = "#a37041";
     },
     update: function() {
+        //changes states
         if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
             game.state.start('MainMenu');
         }
-
     }
 }
 
 var Loading = function(game) {};
 Loading.prototype = {
     preload: function() {
+        //loads all data also sets loading bar
         background = game.add.sprite(0, 0, 'background1');
         TimerText = game.add.bitmapText(game.world.centerX, game.world.centerY, 'font', 'Loading...', 120);
         TimerText.anchor.setTo(0.5, 0.5);
@@ -415,7 +383,6 @@ Loading.prototype = {
         game.load.image('barBottom', 'PowerBarBottom.png');
         game.load.image('p1', 'P1_controls.png');
         game.load.image('p2', 'P2_controls.png');
-
     },
     create: function() {
         MainMusic = game.add.audio('MainMusic');
@@ -427,6 +394,7 @@ Loading.prototype = {
 
     },
     update: function() {
+        //once music is done decoding change states
         if (!MainMusic.isDecoding) {
             game.state.start('MainMenu');
         }
@@ -437,6 +405,7 @@ Loading.prototype = {
 var PreLoading = function(game) {};
 PreLoading.prototype = {
     preload: function() {
+        //preloads loading assets
         game.load.image('background1', 'assets/img/background.png');
         game.load.image('bar', 'assets/img/PowerBar.png');
         game.load.bitmapFont('font', 'assets/Bitmap/SpaceShip.png', 'assets/Bitmap/SpaceShip.fnt');
@@ -445,23 +414,22 @@ PreLoading.prototype = {
 
     },
     update: function() {
+        //changes states
         game.state.start('Loading');
 
     }
 }
 
-
-
-
-
 var Round = function(game) {};
 Round.prototype = {
     preload: function() {
+        //stops music
         MainMusic.stop();
     },
     create: function() {
-    	cooking = game.add.audio('cooking');
-    	cooking.play();
+        //adds sprites and audio to the game
+        cooking = game.add.audio('cooking');
+        cooking.play();
         table = game.add.sprite(0, 0, 'table');
         food = game.add.sprite(395, 270, 'food');
         food1 = game.add.sprite(1000, 100000, 'food');
@@ -484,6 +452,7 @@ Round.prototype = {
         TimerText.scale.set(.5);
         TimerText.anchor.setTo(.5, .5);
 
+        //puts win icons if player has won them
         if (p1_wins == 1) {
             winIcon.x = 130;
         }
@@ -502,6 +471,7 @@ Round.prototype = {
             winIcon3.x = 715;
         }
 
+        //adds text
         scoreText = game.add.bitmapText(16, 16, 'font', 'P1 Score: 0', 32);
         powerText = game.add.bitmapText(30, 750, 'font', 'Telekinetic Power', 32);
         scoreText2 = game.add.bitmapText(600, 16, 'font', 'P2 Score: 0', 32);
@@ -509,7 +479,6 @@ Round.prototype = {
         WinText = game.add.bitmapText(16, 60, 'font', 'Wins: ', 32);
         WinText2 = game.add.bitmapText(600, 60, 'font', 'Wins: ', 32);
         RoundText = game.add.bitmapText(400, 350, 'font', 'Course ' + (roundCount + 1), 120);
-
         barBot = game.add.sprite(525, 790, 'barBottom');
         barBot2 = game.add.sprite(65, 790, 'barBottom');
         bar = game.add.sprite(80, 800, 'bar');
@@ -519,7 +488,7 @@ Round.prototype = {
         bar.tint = 0x00FF00;
         bar2.tint = 0x00FF00;
 
-
+        //says which player won last round
         if (lastWinner) {
             WinnerText = game.add.bitmapText(400, 350, 'font', 'PLAYER 1 WINS! ', 70);
         } else {
@@ -534,6 +503,7 @@ Round.prototype = {
         RoundText.strokeThickness = 5;
         RoundText.alpha = 0;
 
+        //plays text animations
         if (roundCount == 0) {
             WinnerText.text = "GET READY!";
         }
@@ -567,12 +537,11 @@ Round.prototype = {
         game.stage.backgroundColor = "#a37041";
     },
     update: function() {
-        //changes states
 
     }
 }
 
-//variable to affect speed of power
+//global variables
 var up;
 var r;
 var w;
@@ -612,10 +581,9 @@ function endGame(player, box) {
     game.state.start('GameOver')
 }
 
-//moves the food to the plate 300 550
+//moves the food to the plate
 //check and see if already pulled or not?
 //pool[w] increase w each pass through then change it back to 0 at end of pull
-//game.time.events.remove(pool[w])
 function returnFood(x, y) {
     w++;
     if (alreadyPulled) {
@@ -659,6 +627,7 @@ function returnFood(x, y) {
 
 }
 
+//changes tint of timer
 function rainbowMaker() {
     rainbowOn = true;
 
@@ -677,6 +646,7 @@ function rainbowMaker() {
     }
 }
 
+//changes the time each second and does sfx for timer
 function changeTime() {
     if (time > 0) {
         time--;
@@ -743,8 +713,8 @@ GamePlay.prototype = {
         yelp5 = game.add.audio('yelp5');
         yelp6 = game.add.audio('yelp6');
         eating = game.add.audio('eating');
-        //adds all sprites
 
+        //adds all sprites
         food = game.add.sprite(395, 270, 'food');
         food1 = game.add.sprite(1000, 100000, 'food');
         fork = new Fork(game, food, 100, 600, 165, 670, 'fork');
@@ -754,25 +724,21 @@ GamePlay.prototype = {
         food4 = game.add.sprite(10000, 10000, 'food4');
         food5 = game.add.sprite(10000, 10000, 'food5');
         food6 = game.add.sprite(10000, 10000, 'food6');
-
-
         barBot = game.add.sprite(525, 790, 'barBottom');
         barBot2 = game.add.sprite(65, 790, 'barBottom');
         bar = game.add.sprite(80, 800, 'bar');
         bar2 = game.add.sprite(540, 800, 'bar');
         barTop = game.add.sprite(540, 800, 'barTop');
         barTop2 = game.add.sprite(80, 800, 'barTop');
-
         width = bar.width;
         width2 = bar.width;
-
         r = 1;
-
         winIcon = game.add.sprite(3000, 80, 'Icon');
         winIcon2 = game.add.sprite(3000, 80, 'Icon');
         winIcon3 = game.add.sprite(3000, 80, 'Icon');
         winIcon4 = game.add.sprite(3000, 80, 'Icon');
 
+        //adds physics
         game.physics.arcade.enable(food);
         game.physics.arcade.enable(food2);
         game.physics.arcade.enable(food3);
@@ -781,6 +747,7 @@ GamePlay.prototype = {
         game.physics.arcade.enable(food5);
         game.physics.arcade.enable(food6);
 
+        //anchors sprites
         food.anchor.setTo(0.5, 0.5);
         food2.anchor.setTo(0.5, 0.5);
         food3.anchor.setTo(0.5, 0.5);
@@ -788,12 +755,12 @@ GamePlay.prototype = {
         food4.anchor.setTo(0.5, 0.5);
         food5.anchor.setTo(0.5, 0.5);
         food6.anchor.setTo(0.5, 0.5);
-
         winIcon.anchor.setTo(0.5, 0.5);
         winIcon2.anchor.setTo(0.5, 0.5);
         winIcon3.anchor.setTo(0.5, 0.5);
         winIcon4.anchor.setTo(0.5, 0.5);
 
+        //sets variables
         w = 0;
         up = true;
         up2 = true;
@@ -806,13 +773,13 @@ GamePlay.prototype = {
         lastWinner = false;
         foodInPlay = true;
 
+        //adds text
         scoreText = game.add.bitmapText(16, 16, 'font', 'P1 Score: 0', 32);
         powerText = game.add.bitmapText(30, 750, 'font', 'Telekinetic Power', 32);
         scoreText2 = game.add.bitmapText(600, 16, 'font', 'P2 Score: 0', 32);
         powerText2 = game.add.bitmapText(490, 750, 'font', 'Telekinetic Power', 30);
         WinText = game.add.bitmapText(16, 60, 'font', 'Wins: ', 32);
         WinText2 = game.add.bitmapText(600, 60, 'font', 'Wins: ', 32);
-
         TimerText = game.add.bitmapText(400, 60, 'font', '30', 120);
         TimerText.scale.set(.5);
         TimerText.stroke = '#000000';
@@ -821,6 +788,7 @@ GamePlay.prototype = {
         game.time.events.loop(Phaser.Timer.SECOND, changeTime, this);
         rainbowOn = false;
 
+        //adds wins icons based on wins
         if (p1_wins == 1) {
             winIcon.x = 130;
         }
@@ -872,25 +840,28 @@ GamePlay.prototype = {
             }
         }
 
-        //charges the power "bar"
+        //charges the power bar
         if (cursors.down.isDown && !fork2.isFoodOnPlate()) {
             fork2.canShoot = true;
             fork2.enableCollision = true;
         }
-        //charges the power "bar"
+        //charges the power bar
         if (game.input.keyboard.isDown(Phaser.Keyboard.S) && !fork.isFoodOnPlate()) {
             fork.canShoot = true;
             fork.enableCollision = true;
         }
 
+        //controls power bar
         if (fork.isStartPos() && !fork.canShoot) {
             fork.powerBar();
         }
 
+        //controls power bar
         if (fork2.isStartPos() && !fork2.canShoot) {
             fork2.powerBar();
         }
 
+        //changes visuals based on speedfactor
         bar.width = width * (fork.speedFactor / 100);
         bar2.width = width2 * (fork2.speedFactor / 100);
 
@@ -901,49 +872,50 @@ GamePlay.prototype = {
         game.physics.arcade.collide(fork, food, () => {
             fork.collision();
             let temp = r;
-                    r = game.rnd.integerInRange(1, 6);
-                    while (temp === r) {
-                        r = game.rnd.integerInRange(1, 6);
-                    }
-                    if (r == 1) {
-                        yelp1.play('', 0, 5);
-                    } else if (r == 2) {
-                        yelp2.play('', 0, 5);
-                    } else if (r == 3) {
-                        yelp3.play('', 0, 1);
-                    } else if (r == 4) {
-                        yelp4.play('', 0, 1);
-                    } else if (r == 5) {
-                        yelp5.play('', 0, 5);
-                    } else {
-                        yelp6.play('', 0, 5);
-                    }
+            r = game.rnd.integerInRange(1, 6);
+            while (temp === r) {
+                r = game.rnd.integerInRange(1, 6);
+            }
+            if (r == 1) {
+                yelp1.play('', 0, 5);
+            } else if (r == 2) {
+                yelp2.play('', 0, 5);
+            } else if (r == 3) {
+                yelp3.play('', 0, 1);
+            } else if (r == 4) {
+                yelp4.play('', 0, 1);
+            } else if (r == 5) {
+                yelp5.play('', 0, 5);
+            } else {
+                yelp6.play('', 0, 5);
+            }
         }, () => { return fork.enableCollision; });
         game.physics.arcade.collide(fork2, food, () => {
             fork2.collision();
             let temp = r;
-                    r = game.rnd.integerInRange(1, 6);
-                    while (temp === r) {
-                        r = game.rnd.integerInRange(1, 6);
-                    }
-                    if (r == 1) {
-                        yelp1.play('', 0, 5);
-                    } else if (r == 2) {
-                        yelp2.play('', 0, 5);
-                    } else if (r == 3) {
-                        yelp3.play('', 0, 1);
-                    } else if (r == 4) {
-                        yelp4.play('', 0, 1);
-                    } else if (r == 5) {
-                        yelp5.play('', 0, 5);
-                    } else {
-                        yelp6.play('', 0, 5);
-                    }
+            r = game.rnd.integerInRange(1, 6);
+            while (temp === r) {
+                r = game.rnd.integerInRange(1, 6);
+            }
+            if (r == 1) {
+                yelp1.play('', 0, 5);
+            } else if (r == 2) {
+                yelp2.play('', 0, 5);
+            } else if (r == 3) {
+                yelp3.play('', 0, 1);
+            } else if (r == 4) {
+                yelp4.play('', 0, 1);
+            } else if (r == 5) {
+                yelp5.play('', 0, 5);
+            } else {
+                yelp6.play('', 0, 5);
+            }
         }, () => { return fork2.enableCollision; });
 
+        //lets forks overlap
         game.physics.arcade.overlap(fork, fork2);
 
-        //allows the player to eat food if its on their plate
+        //allows the player to eat food if its on their plate and puts new random food in plate position
         if (foodInPlay) {
             if ((game.input.keyboard.isDown(Phaser.Keyboard.A) && foodEat) || (cursors.left.isDown && foodEat2)) {
                 eating.play('', 0, 5);
@@ -1002,19 +974,6 @@ GamePlay.prototype = {
         //changes game state
     },
 
-    render: function() {
-        /*
-        game.debug.body(fork);
-        game.debug.body(fork2);
-        game.debug.body(food);
-        game.debug.text('FPS: ' + game.time.fps || 'FPS: -- ', 40, 40, "#00ff00");
-		*/
-        //game.debug.text("Time until event: " + game.time.events.duration.toFixed(0), 32, 32);
-        //game.debug.text("Next tick: " + game.time.events.next.toFixed(0), 32, 64);
-
-    }
-
-
 }
 
 var GameOver = function(game) {};
@@ -1024,7 +983,28 @@ GameOver.prototype = {
     },
     create: function() {
 
-        //checks for highscore in the local storage
+        //adds background and text
+        background = game.add.sprite(0, 0, 'endScreen');
+        GameOver = game.add.bitmapText(game.world.centerX, 200, 'font', 'Meal Over', 80);
+        GameOver2 = game.add.bitmapText(game.world.centerX, 425, 'font', 'Press "R" to start a new meal', 45);
+        GameOver3 = game.add.bitmapText(game.world.centerX, 500, 'font', 'Press "Enter" to go to the Main Menu', 45);
+        GameOver4 = game.add.bitmapText(game.world.centerX, 575, 'font', 'Press "C" to see the all the Cooks', 45);
+
+        if (p1_wins > p2_wins) {
+            GameOver5 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 1 WINS!', 80);
+        } else {
+            GameOver5 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 2 WINS!', 80);
+        }
+        GameOver.anchor.setTo(0.5, 0.5);
+        GameOver2.anchor.setTo(0.5, 0.5);
+        GameOver3.anchor.setTo(0.5, 0.5);
+        GameOver4.anchor.setTo(0.5, 0.5);
+        GameOver5.anchor.setTo(0.5, 0.5);
+        p1_wins = 0;
+        p2_wins = 0;
+
+
+        //checks for highscore in the local storage and records top 3 scores and names
         if (localStorage.getItem('hiscore') != null) {
             let storedScore = parseInt(localStorage.getItem('hiscore'));
             //see if current play is higher than stored score
@@ -1056,7 +1036,7 @@ GameOver.prototype = {
                         localStorage.setItem('hiscore2', highest.toString());
                         let storedName2 = localStorage.getItem('playerName2');
                         localStorage.setItem('playerName3', storedName2);
-                        var player = prompt("NewpHighScore, Enter Name (MAX 3 LETTERS)", "AAA");
+                        var player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
                         while (player == null || player.length > 3) {
                             player = prompt("New HighScore, Enter Name (MAX 3 LETTERS)", "AAA");
                         }
@@ -1109,33 +1089,12 @@ GameOver.prototype = {
 
         }
 
-        background = game.add.sprite(0, 0, 'endScreen');
-        GameOver = game.add.bitmapText(game.world.centerX, 200, 'font', 'Meal Over', 80);
-        GameOver2 = game.add.bitmapText(game.world.centerX, 425, 'font', 'Press "R" to start a new meal', 45);
-        GameOver3 = game.add.bitmapText(game.world.centerX, 500, 'font', 'Press "Enter" to go to the Main Menu', 45);
-        GameOver4 = game.add.bitmapText(game.world.centerX, 575, 'font', 'Press "C" to see the all the Cooks', 45);
-
-        if (p1_wins > p2_wins) {
-            GameOver5 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 1 WINS!', 80);
-        } else {
-            GameOver5 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 2 WINS!', 80);
-        }
-        GameOver.anchor.setTo(0.5, 0.5);
-        GameOver2.anchor.setTo(0.5, 0.5);
-        GameOver3.anchor.setTo(0.5, 0.5);
-        GameOver4.anchor.setTo(0.5, 0.5);
-        GameOver5.anchor.setTo(0.5, 0.5);
-        p1_wins = 0;
-        p2_wins = 0;
-
     },
     update: function() {
-        //moves to main menu state
+        //changes game state
         if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
             game.state.start('MainMenu');
             MainMusic.stop();
-
-
         }
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.R)) {
@@ -1149,7 +1108,6 @@ GameOver.prototype = {
         }
     }
 }
-
 
 game.state.add('MainMenu', MainMenu);
 game.state.add('GamePlay', GamePlay);

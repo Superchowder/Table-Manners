@@ -28,6 +28,7 @@ Fork.prototype = Object.create(Phaser.Sprite.prototype);
 Fork.prototype.constructor = Fork;
 
 Fork.prototype.rotate = function() {
+	//rotates fork
     if (this.angle < 110 && this.clockwise) {
         this.angle += 8;
     } else if (this.angle >= 110 && this.clockwise) {
@@ -38,6 +39,7 @@ Fork.prototype.rotate = function() {
         this.clockwise = true;
     }
 
+    //rotates hitbox
     let temp = (this.angle + 90) * (Math.PI / 180);
     let x = Math.cos(temp) * 45;
     let y = Math.sin(temp) * 45;
@@ -68,7 +70,6 @@ Fork.prototype.returnFork = function() {
             this.y -= yPos;
         }, this);
 
-        //fix
         this.game.time.events.add(1050, () => {
             this.speedFactor = 0;
             this.x = this.initx;
@@ -101,6 +102,7 @@ Fork.prototype.collision = function() {
 
 }
 
+//changes power bar
 Fork.prototype.powerBar = function() {
     if (this.speedFactor < 99 && this.up) {
         this.speedFactor += 3;
