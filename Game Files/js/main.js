@@ -175,7 +175,7 @@ Controls.prototype = {
         controlText3 = game.add.bitmapText(16, 350, 'font', 'Eat more food in this 5 course meal experience to win.', 28);
         //controlText3.anchor.setTo(0.5, 0.5);
 
-        controlText4 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press Enter to go to main menu', 40);
+        controlText4 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press "Enter" to go to main menu', 40);
         controlText4.anchor.setTo(0.5, 0.5);
 
 
@@ -206,22 +206,22 @@ Credits.prototype = {
 
     },
     create: function() {
-        creditText1 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press Enter to go to main menu', 40);
+        creditText1 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press "Enter" to go to main menu', 40);
         creditText1.anchor.setTo(0.5, 0.5);
 
-        creditText2 = game.add.bitmapText(game.world.centerX - 220, 200, 'font', 'Samuel Barish', 40);
-        creditText2.anchor.setTo(0.5, 0.5);
-        creditText3 = game.add.bitmapText(game.world.centerX + 140, 203, 'font', 'Programming/Design/Audio', 30);
+        creditText2 = game.add.bitmapText(32, 200, 'font', 'Programming/Design/Audio', 30);
+        //creditText2.anchor.setTo(0.5, 0.5);
+        creditText3 = game.add.bitmapText(game.world.centerX + 165, 213, 'font', 'Samuel Barish', 30);
         creditText3.anchor.setTo(0.5, 0.5);
 
-        creditText4 = game.add.bitmapText(game.world.centerX - 220, 270, 'font', 'Jinjun Xiao', 40);
-        creditText4.anchor.setTo(0.5, 0.5);
-        creditText5 = game.add.bitmapText(game.world.centerX + 140, 273, 'font', 'Art', 30);
+        creditText4 = game.add.bitmapText(32, 265, 'font', 'Art', 30);
+        //creditText4.anchor.setTo(0.5, 0.5);
+        creditText5 = game.add.bitmapText(game.world.centerX + 140, 285, 'font', 'Jinjun Xiao', 30);
         creditText5.anchor.setTo(0.5, 0.5);
 
-        creditText6 = game.add.bitmapText(game.world.centerX - 220, 340, 'font', 'Charles Miller', 40);
-        creditText6.anchor.setTo(0.5, 0.5);
-        creditText7 = game.add.bitmapText(game.world.centerX + 140, 343, 'font', 'Design', 30);
+        creditText6 = game.add.bitmapText(32, 335, 'font', 'Design', 30);
+        //creditText6.anchor.setTo(0.5, 0.5);
+        creditText7 = game.add.bitmapText(game.world.centerX + 160, 350, 'font', 'Charles Miller', 30);
         creditText7.anchor.setTo(0.5, 0.5);
 
         creditText8 = game.add.bitmapText(game.world.centerX, 420, 'font', 'Special Thanks', 35);
@@ -320,7 +320,7 @@ Leaderboard.prototype = {
         leaderText9 = game.add.bitmapText(game.world.centerX - 55, 500, 'font', "---", 64);
         leaderText10 = game.add.bitmapText(game.world.centerX + 240, 500, 'font', "---", 64);
 
-        leaderText11 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press Enter to go to main menu', 40);
+        leaderText11 = game.add.bitmapText(game.world.centerX, 800, 'font', 'Press "Enter" to go to main menu', 40);
         leaderText11.anchor.setTo(0.5, 0.5);
 
         leaderText.anchor.setTo(0.5, 0.5);
@@ -382,7 +382,14 @@ Loading.prototype = {
         this.load.setPreloadSprite(this.preloadBar);
 
         game.load.audio('music', 'assets/audio/GameSound.mp3');
-        game.load.audio('yelp', 'assets/audio/ouch.mp3');
+        game.load.audio('yelp1', 'assets/audio/ahhh.mp3');
+        game.load.audio('eating', 'assets/audio/eating.mp3');
+        game.load.audio('cooking', 'assets/audio/cooking.mp3');
+        game.load.audio('yelp2', 'assets/audio/ouch.mp3');
+        game.load.audio('yelp3', 'assets/audio/hehehe.mp3');
+        game.load.audio('yelp4', 'assets/audio/scared.mp3');
+        game.load.audio('yelp5', 'assets/audio/whee.mp3');
+        game.load.audio('yelp6', 'assets/audio/ouchie.mp3');
         game.load.audio('MainMusic', 'assets/audio/Theme.mp3');
         game.load.image('endScreen', 'assets/img/endscreen.png');
         game.load.image('background', 'assets/img/background.png');
@@ -398,7 +405,7 @@ Loading.prototype = {
         game.load.path = 'assets/img/';
         game.load.image('table', 'table2.png');
         game.load.image('food', 'sushiroll.png');
-        game.load.image('Icon', 'myMeat.png');
+        game.load.image('Icon', 'belly.png');
         game.load.image('food2', 'watermelon.png');
         game.load.image('food3', 'bread.png');
         game.load.image('food4', 'milk.png');
@@ -453,6 +460,8 @@ Round.prototype = {
         MainMusic.stop();
     },
     create: function() {
+    	cooking = game.add.audio('cooking');
+    	cooking.play();
         table = game.add.sprite(0, 0, 'table');
         food = game.add.sprite(395, 270, 'food');
         food1 = game.add.sprite(1000, 100000, 'food');
@@ -480,7 +489,7 @@ Round.prototype = {
         }
 
         if (p1_wins == 2) {
-            winIcon2.x = 160;
+            winIcon2.x = 170;
             winIcon.x = 130;
         }
 
@@ -489,7 +498,7 @@ Round.prototype = {
         }
 
         if (p2_wins == 2) {
-            winIcon4.x = 745;
+            winIcon4.x = 755;
             winIcon3.x = 715;
         }
 
@@ -727,7 +736,13 @@ GamePlay.prototype = {
         //audio
         gameMusic = game.add.audio('music');
         gameMusic.loopFull(.5);
-        yelp = game.add.audio('yelp');
+        yelp1 = game.add.audio('yelp1');
+        yelp2 = game.add.audio('yelp2');
+        yelp3 = game.add.audio('yelp3');
+        yelp4 = game.add.audio('yelp4');
+        yelp5 = game.add.audio('yelp5');
+        yelp6 = game.add.audio('yelp6');
+        eating = game.add.audio('eating');
         //adds all sprites
 
         food = game.add.sprite(395, 270, 'food');
@@ -811,7 +826,7 @@ GamePlay.prototype = {
         }
 
         if (p1_wins == 2) {
-            winIcon2.x = 160;
+            winIcon2.x = 170;
             winIcon.x = 130;
         }
 
@@ -820,7 +835,7 @@ GamePlay.prototype = {
         }
 
         if (p2_wins == 2) {
-            winIcon4.x = 745;
+            winIcon4.x = 755;
             winIcon3.x = 715;
         }
 
@@ -885,11 +900,45 @@ GamePlay.prototype = {
         //checks for collision
         game.physics.arcade.collide(fork, food, () => {
             fork.collision();
-            yelp.play();
+            let temp = r;
+                    r = game.rnd.integerInRange(1, 6);
+                    while (temp === r) {
+                        r = game.rnd.integerInRange(1, 6);
+                    }
+                    if (r == 1) {
+                        yelp1.play('', 0, 5);
+                    } else if (r == 2) {
+                        yelp2.play('', 0, 5);
+                    } else if (r == 3) {
+                        yelp3.play('', 0, 1);
+                    } else if (r == 4) {
+                        yelp4.play('', 0, 1);
+                    } else if (r == 5) {
+                        yelp5.play('', 0, 5);
+                    } else {
+                        yelp6.play('', 0, 5);
+                    }
         }, () => { return fork.enableCollision; });
         game.physics.arcade.collide(fork2, food, () => {
             fork2.collision();
-            yelp.play();
+            let temp = r;
+                    r = game.rnd.integerInRange(1, 6);
+                    while (temp === r) {
+                        r = game.rnd.integerInRange(1, 6);
+                    }
+                    if (r == 1) {
+                        yelp1.play('', 0, 5);
+                    } else if (r == 2) {
+                        yelp2.play('', 0, 5);
+                    } else if (r == 3) {
+                        yelp3.play('', 0, 1);
+                    } else if (r == 4) {
+                        yelp4.play('', 0, 1);
+                    } else if (r == 5) {
+                        yelp5.play('', 0, 5);
+                    } else {
+                        yelp6.play('', 0, 5);
+                    }
         }, () => { return fork2.enableCollision; });
 
         game.physics.arcade.overlap(fork, fork2);
@@ -897,6 +946,7 @@ GamePlay.prototype = {
         //allows the player to eat food if its on their plate
         if (foodInPlay) {
             if ((game.input.keyboard.isDown(Phaser.Keyboard.A) && foodEat) || (cursors.left.isDown && foodEat2)) {
+                eating.play('', 0, 5);
                 foodInPlay = false;
                 game.time.events.remove(timerEvents[w]);
                 game.time.events.remove(timerEvents2[w]);
@@ -970,7 +1020,7 @@ GamePlay.prototype = {
 var GameOver = function(game) {};
 GameOver.prototype = {
     preload: function() {
-
+        MainMusic.loopFull(.5);
     },
     create: function() {
 
@@ -1061,9 +1111,9 @@ GameOver.prototype = {
 
         background = game.add.sprite(0, 0, 'endScreen');
         GameOver = game.add.bitmapText(game.world.centerX, 200, 'font', 'Meal Over', 80);
-        GameOver2 = game.add.bitmapText(game.world.centerX, 425, 'font', 'Press R to start a new meal', 45);
-        GameOver3 = game.add.bitmapText(game.world.centerX, 500, 'font', 'Press Enter to go to the Main Menu', 45);
-        GameOver4 = game.add.bitmapText(game.world.centerX, 575, 'font', 'Press C to see the all the Cooks', 45);
+        GameOver2 = game.add.bitmapText(game.world.centerX, 425, 'font', 'Press "R" to start a new meal', 45);
+        GameOver3 = game.add.bitmapText(game.world.centerX, 500, 'font', 'Press "Enter" to go to the Main Menu', 45);
+        GameOver4 = game.add.bitmapText(game.world.centerX, 575, 'font', 'Press "C" to see the all the Cooks', 45);
 
         if (p1_wins > p2_wins) {
             GameOver5 = game.add.bitmapText(game.world.centerX, 300, 'font', 'Player 1 WINS!', 80);
@@ -1083,11 +1133,15 @@ GameOver.prototype = {
         //moves to main menu state
         if (game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
             game.state.start('MainMenu');
+            MainMusic.stop();
+
+
         }
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.R)) {
             roundCount = 0;
             game.state.start('Round');
+            MainMusic.stop();
         }
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.C)) {
